@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<title>Fawzeer Talabat — Leadership Principles Quest</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:       #1a0a00;
+  --bg-card:  #2f1b08;
+  --bg-high:  #3a2512;
+  --bg-top:   #46301c;
+  --orange:   #ff5a00;
+  --orange2:  rgba(255,90,0,.22);
+  --gold:     #f8bd4b;
+  --gold2:    rgba(248,189,75,.15);
+  --cream:    #ffdcc0;
+  --cream2:   rgba(255,220,192,.55);
+  --green:    #4ae176;
+  --green2:   rgba(74,225,118,.18);
+  --red:      #ff4444;
+  --red2:     rgba(255,68,68,.18);
+  --border:   rgba(255,220,192,.1);
+  --font:     'Space Grotesk',sans-serif;
+  --display:  'Syne',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;user-select:none}
+input,textarea{user-select:text}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--cream);font-family:var(--font)}
+
+/* ── AMBIENT GLOW ── */
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse at 50% 0%,rgba(255,90,0,.14) 0%,transparent 60%),
+             radial-gradient(ellipse at 80% 90%,rgba(248,189,75,.07) 0%,transparent 50%)}
+
+/* ── PARTICLES ── */
+#ptcl{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:1}
+.ptcl{position:absolute;bottom:-20px;border-radius:50%;animation:rise linear infinite;opacity:0}
+@keyframes rise{0%{transform:translateY(0) scale(.5);opacity:0}15%{opacity:.55}85%{opacity:.3}100%{transform:translateY(-110vh) scale(1.3);opacity:0}}
+
+/* ── APP WRAPPER ── */
+#app{position:relative;z-index:2;width:100%;height:100vh;display:flex;align-items:center;justify-content:center}
+.view{display:none;position:fixed;inset:0;z-index:10;flex-direction:column;align-items:center;justify-content:center;padding:16px;overflow:hidden}
+.view.on{display:flex}
+
+/* ── TRANSITIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes popIn{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes slideUp{from{transform:translateY(100%);opacity:0}to{transform:none;opacity:1}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-10px)}40%{transform:translateX(10px)}60%{transform:translateX(-7px)}80%{transform:translateX(7px)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+@keyframes glow{0%,100%{box-shadow:0 0 12px var(--orange)}50%{box-shadow:0 0 32px var(--orange),0 0 60px var(--orange2)}}
+@keyframes streakAnim{0%,100%{transform:scale(1);box-shadow:0 0 0 var(--orange2)}50%{transform:scale(1.1);box-shadow:0 0 20px var(--orange)}}
+@keyframes countBounce{0%{transform:scale(2.2);opacity:0}50%{transform:scale(.9);opacity:1}75%{transform:scale(1.05)}100%{transform:scale(1);opacity:1}}
+@keyframes barUrgent{0%,100%{opacity:1}50%{opacity:.6}}
+@keyframes confettiDrop{0%{transform:translateY(-30px) rotate(0deg);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
+@keyframes revealLetter{from{transform:scale(1.8) rotateY(90deg);opacity:0;color:var(--gold)}to{transform:scale(1) rotateY(0deg);opacity:1;color:var(--cream)}}
+@keyframes scoreFlash{0%{color:var(--cream)}50%{color:var(--gold);transform:scale(1.3);text-shadow:0 0 20px var(--gold)}100%{color:var(--gold)}}
+@keyframes wipeIn{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0% 0 0)}}
+
+/* ── CARDS ── */
+.card{background:var(--bg-card);border:1.5px solid var(--border);border-radius:18px;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+.card-glow{box-shadow:0 0 0 1.5px var(--orange),0 12px 40px rgba(0,0,0,.5),0 0 40px var(--orange2)}
+
+/* ── INPUTS ── */
+.inp{width:100%;background:var(--bg-high);border:2px solid var(--border);border-radius:12px;color:var(--cream);font-family:var(--font);font-size:15px;font-weight:600;padding:13px 16px;outline:none;transition:border-color .2s,box-shadow .2s}
+.inp:focus{border-color:var(--orange);box-shadow:0 0 0 3px var(--orange2)}
+.inp::placeholder{color:var(--cream2);font-weight:400}
+.lbl{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--cream2);margin-bottom:6px;display:block}
+.err{font-size:11px;color:var(--red);font-weight:700;display:none;margin-top:4px}
+
+/* ── BUTTONS ── */
+.btn{font-family:var(--font);font-weight:800;letter-spacing:.02em;text-transform:uppercase;border-radius:12px;cursor:pointer;transition:transform .08s,box-shadow .08s;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn-primary{background:var(--orange);color:#fff;border:3px solid var(--cream);box-shadow:5px 5px 0 var(--cream);font-size:16px;padding:15px 20px;width:100%}
+.btn-primary:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--cream)}
+.btn-primary:active{transform:translate(3px,3px);box-shadow:2px 2px 0 var(--cream)}
+.btn-primary:disabled{opacity:.5;pointer-events:none}
+.btn-ghost{background:transparent;color:var(--cream2);border:1.5px solid var(--border);font-size:12px;padding:7px 16px;border-radius:99px}
+.btn-ghost:hover{color:var(--cream);border-color:var(--cream)}
+.btn-next{background:var(--orange);color:#fff;border:2.5px solid var(--cream);box-shadow:4px 4px 0 var(--cream);font-size:14px;padding:10px 20px;border-radius:10px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-family:var(--font);transition:transform .08s,box-shadow .08s}
+.btn-next:hover{transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--cream)}
+.btn-next:active{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--cream)}
+
+/* ── BADGES / PILLS ── */
+.pill{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:99px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.pill-orange{background:var(--orange2);color:var(--orange);border:1px solid var(--orange)}
+.pill-gold{background:var(--gold2);color:var(--gold);border:1px solid rgba(248,189,75,.3)}
+.pill-green{background:var(--green2);color:var(--green);border:1px solid rgba(74,225,118,.3)}
+.pill-muted{background:var(--bg-high);color:var(--cream2);border:1px solid var(--border)}
+
+/* ═══════════════ LOBBY ═══════════════ */
+#vLobby{background:transparent}
+.lobby-wrap{width:100%;max-width:440px;display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
+.logo-mark{font-family:var(--display);font-size:clamp(36px,8vw,52px);font-weight:800;letter-spacing:-.04em;color:var(--orange);line-height:1;text-shadow:0 0 40px rgba(255,90,0,.4)}
+.logo-sub{font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+.lp-pills{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.lp-pill{font-size:20px;cursor:default;animation:popIn .5s cubic-bezier(.34,1.56,.64,1) both}
+.form-card{width:100%;padding:24px 20px;display:flex;flex-direction:column;gap:14px}
+.already-card{width:100%;max-width:440px;padding:32px 24px;display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center}
+.trophy{font-size:64px;animation:countBounce 1s ease both,glow 2s ease infinite 1s}
+.already-score{font-family:var(--display);font-size:56px;font-weight:800;color:var(--orange);line-height:1}
+.admin-link{font-size:11px;color:var(--cream2);cursor:pointer;text-decoration:underline;margin-top:4px}
+
+/* ═══════════════ ROUND INTRO ═══════════════ */
+#vIntro{background:var(--bg);overflow:hidden}
+.intro-wrap{width:100%;max-width:540px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:20px}
+.intro-rnum{font-family:var(--display);font-size:clamp(40px,10vw,64px);font-weight:800;color:var(--gold);letter-spacing:-.04em;text-transform:uppercase;animation:wipeIn .5s ease both}
+.intro-rname{font-size:clamp(18px,4vw,26px);font-weight:800;color:var(--cream);text-transform:uppercase;letter-spacing:-.02em}
+.intro-specs{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.intro-quote{font-style:italic;color:var(--cream2);font-size:13px;line-height:1.55;max-width:400px;padding:12px 16px;border-left:3px solid var(--orange);background:var(--orange2);border-radius:0 10px 10px 0;text-align:left}
+.intro-count{font-family:var(--display);font-size:clamp(80px,18vw,120px);font-weight:800;color:var(--orange);line-height:1;text-shadow:0 0 60px var(--orange2)}
+.count-pop{animation:countBounce .7s cubic-bezier(.34,1.56,.64,1) both}
+
+/* ═══════════════ GAME ═══════════════ */
+#vGame{background:var(--bg);padding:0;justify-content:flex-start}
+.game-wrap{width:100%;height:100%;max-width:680px;margin:0 auto;display:flex;flex-direction:column;padding:10px 14px 10px;gap:8px;overflow:hidden}
+
+/* header */
+.g-header{display:flex;align-items:center;justify-content:space-between;height:46px;flex-shrink:0}
+.g-brand{font-family:var(--display);font-size:16px;font-weight:800;color:var(--orange);letter-spacing:-.02em}
+.g-round-pill{padding:4px 12px;background:var(--bg-card);border:1px solid var(--border);border-radius:99px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--cream2)}
+.g-right{display:flex;align-items:center;gap:8px}
+.streak{display:none;align-items:center;gap:3px;padding:3px 10px;background:#4a1d00;border:1px solid var(--orange);border-radius:99px;font-size:11px;font-weight:800;color:var(--orange);animation:streakAnim 1.2s ease infinite}
+.g-score{font-family:var(--display);font-size:18px;font-weight:800;color:var(--gold);font-variant-numeric:tabular-nums;transition:transform .15s}
+.score-flash{animation:scoreFlash .4s ease forwards}
+
+/* progress */
+.g-progress{height:5px;background:rgba(255,255,255,.07);border-radius:99px;overflow:hidden;flex-shrink:0}
+.g-progress-fill{height:100%;background:linear-gradient(90deg,var(--orange),var(--gold));border-radius:99px;transition:width .4s cubic-bezier(.34,1.56,.64,1)}
+
+/* timer */
+.g-timer{display:flex;align-items:center;gap:10px;height:38px;flex-shrink:0}
+.g-timer-lbl{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--cream2);width:34px;flex-shrink:0}
+.g-timer-track{flex:1;height:9px;background:var(--bg-top);border-radius:99px;overflow:hidden;border:1px solid var(--border)}
+.g-timer-fill{height:100%;background:var(--orange);border-radius:99px;transition:width 1s linear,background-color .3s}
+.g-timer-fill.mid{background:var(--gold)}
+.g-timer-fill.low{background:var(--red);animation:barUrgent .6s infinite}
+.g-timer-num{font-family:var(--display);font-size:16px;font-weight:800;width:30px;text-align:right;color:var(--cream);font-variant-numeric:tabular-nums}
+.g-timer-num.low{color:var(--red);animation:pulse .6s infinite}
+
+/* question */
+.g-question{background:var(--bg-card);border:1.5px solid var(--border);border-radius:16px;padding:14px 16px;flex-shrink:0;position:relative;overflow:hidden;animation:fadeUp .35s cubic-bezier(.34,1.56,.64,1) both}
+.g-question::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--orange),transparent)}
+.q-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.q-num{font-size:11px;font-weight:800;color:var(--orange);text-transform:uppercase;letter-spacing:.06em;background:var(--orange2);padding:3px 9px;border-radius:6px}
+.q-dept{font-size:11px;font-weight:700;color:var(--gold);background:var(--gold2);padding:3px 9px;border-radius:6px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.q-text{font-size:clamp(14px,2.2vh,18px);font-weight:700;line-height:1.38;color:var(--cream)}
+
+/* answers */
+.g-answers{flex:1;display:flex;flex-direction:column;justify-content:stretch;min-height:0}
+.grid-mc4{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:8px;height:100%}
+.grid-mc6{display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:1fr 1fr;gap:7px;height:100%}
+.grid-tf{display:grid;grid-template-columns:1fr 1fr;gap:10px;height:100%}
+.grid-hang{display:flex;flex-direction:column;gap:10px;height:100%}
+
+.opt{background:var(--bg-card);border:2.5px solid var(--cream);box-shadow:4px 4px 0 var(--cream);border-radius:12px;color:var(--cream);font-family:var(--font);font-size:clamp(11px,1.8vh,14px);font-weight:700;display:flex;align-items:center;padding:clamp(8px,1.3vh,13px) 12px;gap:9px;cursor:pointer;text-align:left;line-height:1.25;transition:transform .08s,box-shadow .08s,background .12s;width:100%;height:100%}
+.opt:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--cream)}
+.opt:active{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--cream)}
+.opt-ltr{width:26px;height:26px;min-width:26px;background:var(--bg-top);border:1px solid var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:var(--gold);flex-shrink:0}
+.opt.correct{background:var(--green2)!important;border-color:var(--green)!important;box-shadow:4px 4px 0 var(--green)!important;animation:fadeIn .2s ease}
+.opt.correct .opt-ltr{background:var(--green);color:#000}
+.opt.wrong{background:var(--red2)!important;border-color:var(--red)!important;box-shadow:4px 4px 0 var(--red)!important;animation:shake .32s ease}
+.opt.wrong .opt-ltr{background:var(--red);color:#fff}
+.opt.dim{opacity:.22;pointer-events:none}
+.opt.locked{pointer-events:none}
+
+.tf-opt{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;font-size:clamp(18px,4vh,26px);font-weight:800}
+.tf-t{background:var(--green2)}
+.tf-f{background:var(--red2)}
+.tf-icon{font-size:clamp(28px,5vh,40px)}
+
+/* hangman */
+.hang-word{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;padding:16px;background:var(--bg-card);border:1.5px solid var(--border);border-radius:14px;flex:1}
+.hang-slot{width:36px;height:46px;border-bottom:3.5px solid var(--orange);display:flex;align-items:flex-end;justify-content:center;font-size:24px;font-weight:800;padding-bottom:3px;background:var(--orange2);border-radius:6px 6px 0 0}
+.hang-slot.lit{animation:revealLetter .35s cubic-bezier(.34,1.56,.64,1) both}
+.hang-space{width:16px;border-bottom:none;background:transparent}
+.hang-hint{font-size:12px;color:var(--gold);font-weight:600;text-align:center;flex-shrink:0}
+.hang-input-row{display:flex;gap:8px;flex-shrink:0}
+.hang-inp{flex:1;background:var(--bg-high);border:2px solid var(--border);border-radius:10px;padding:10px 14px;font-family:var(--font);font-size:15px;font-weight:700;color:var(--cream);text-transform:uppercase;outline:none;transition:border-color .2s}
+.hang-inp:focus{border-color:var(--orange)}
+.hang-sub{background:var(--orange);border:2px solid var(--cream);box-shadow:3px 3px 0 var(--cream);border-radius:10px;color:#fff;font-family:var(--font);font-weight:800;font-size:13px;letter-spacing:.04em;text-transform:uppercase;padding:0 18px;cursor:pointer;transition:transform .08s,box-shadow .08s}
+.hang-sub:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--cream)}
+
+/* toast */
+#toast{position:fixed;bottom:0;left:0;right:0;z-index:80;display:none;flex-direction:column;pointer-events:none}
+#toast.on{display:flex;animation:slideUp .35s cubic-bezier(.34,1.56,.64,1)}
+.toast-inner{max-width:680px;width:100%;margin:0 auto;background:var(--bg-card);border:2.5px solid var(--cream);border-bottom:none;border-radius:20px 20px 0 0;padding:16px 18px 20px;box-shadow:0 -8px 30px rgba(0,0,0,.7);pointer-events:all}
+.toast-correct{border-color:var(--green);background:#0d2015}
+.toast-wrong{border-color:var(--red);background:#2b0d0d}
+.toast-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:8px}
+.toast-verdict{font-size:17px;font-weight:800;display:flex;align-items:center;gap:6px}
+.toast-verdict.ok{color:var(--green)}
+.toast-verdict.no{color:var(--red)}
+.toast-badges{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.toast-lp{font-size:12px;font-weight:800;color:var(--gold);background:var(--gold2);padding:4px 10px;border-radius:99px;border:1px solid rgba(248,189,75,.3)}
+.toast-dept{font-size:11px;font-weight:700;color:var(--cream2);background:var(--bg-high);padding:3px 9px;border-radius:99px}
+.toast-text{font-size:13px;font-weight:600;color:var(--cream);line-height:1.4;margin-bottom:10px}
+.toast-row{display:flex;align-items:center;justify-content:flex-end}
+
+/* ═══════════════ END ═══════════════ */
+#vEnd{background:var(--bg);overflow-y:auto;overflow-x:hidden;align-items:flex-start;padding:0}
+.end-wrap{width:100%;max-width:680px;margin:0 auto;padding:16px 14px 40px;display:flex;flex-direction:column;gap:18px}
+.end-hero{text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;padding:28px 20px;background:var(--bg-card);border-radius:20px;position:relative;overflow:hidden}
+.end-hero::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% -20%,rgba(255,90,0,.2) 0%,transparent 70%);pointer-events:none}
+.end-brand{font-family:var(--display);font-size:clamp(26px,6vw,40px);font-weight:800;letter-spacing:-.04em;text-transform:uppercase;color:var(--cream)}
+.end-player{font-size:17px;font-weight:700;color:var(--gold)}
+.end-score-big{font-family:var(--display);font-size:clamp(60px,14vw,88px);font-weight:800;color:var(--orange);line-height:1;letter-spacing:-.04em;text-shadow:0 0 40px rgba(255,90,0,.4)}
+.end-pts{font-size:14px;font-weight:700;color:var(--cream2);text-transform:uppercase;letter-spacing:.08em}
+.end-acc{font-size:14px;font-weight:600;color:var(--cream2)}
+.end-tier{display:inline-flex;align-items:center;gap:8px;padding:8px 20px;background:var(--gold2);border:1.5px solid var(--gold);border-radius:99px;font-size:14px;font-weight:800;color:var(--gold)}
+
+.section-card{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:18px}
+.section-title{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--cream2);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+
+.breakdown-row{display:flex;align-items:center;gap:10px;font-size:12px;font-weight:700;margin-bottom:10px}
+.br-name{width:120px;color:var(--cream);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.br-track{flex:1;height:8px;background:var(--bg-top);border-radius:99px;overflow:hidden}
+.br-fill{height:100%;background:var(--orange);border-radius:99px;transition:width 1s ease-out}
+.br-pts{width:60px;text-align:right;color:var(--gold)}
+
+.lb-row{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;background:rgba(255,220,192,.03);font-size:13px;font-weight:700;margin-bottom:6px}
+.lb-row.me{background:var(--orange2);border:1.5px solid var(--orange)}
+.lb-rank{width:30px;font-weight:800;color:var(--gold)}
+.lb-name{flex:1;color:var(--cream)}
+.lb-pts{font-weight:800;color:var(--orange);font-variant-numeric:tabular-nums}
+
+.end-actions{display:flex;flex-direction:column;gap:10px}
+
+/* ═══════════════ UTILITY BAR ═══════════════ */
+.util-bar{position:fixed;top:12px;right:14px;z-index:200;display:flex;gap:8px}
+.util-btn{width:38px;height:38px;background:rgba(46,27,8,.9);border:2px solid var(--border);border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--cream);transition:transform .08s,border-color .2s;backdrop-filter:blur(8px)}
+.util-btn:hover{border-color:var(--orange);transform:scale(1.08)}
+
+/* ═══════════════ ADMIN MODAL ═══════════════ */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:300;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-bg.on{display:flex}
+.modal{background:var(--bg-card);border:2px solid var(--cream);box-shadow:6px 6px 0 var(--cream);border-radius:18px;max-width:560px;width:100%;max-height:82vh;overflow-y:auto;padding:24px;display:flex;flex-direction:column;gap:14px}
+.modal-title{font-size:18px;font-weight:800;color:var(--orange);display:flex;align-items:center;justify-content:space-between}
+.code-block{background:#0d0500;border:1px solid var(--border);padding:14px;border-radius:10px;font-family:monospace;font-size:11px;color:#7ee787;overflow-x:auto;white-space:pre;max-height:200px;overflow-y:auto;line-height:1.6}
+
+/* ═══════════════ CONFETTI ═══════════════ */
+#cnv{position:fixed;inset:0;pointer-events:none;z-index:150}
+
+/* ═══════════════ RESPONSIVE ═══════════════ */
+@media(max-width:400px){
+  .grid-mc6{grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr 1fr}
+  .opt{font-size:11px;padding:7px 9px}
+}
+@media(max-height:650px){
+  .g-question{padding:10px 14px}
+  .q-text{font-size:13px}
+  .g-timer{height:32px}
+  .g-header{height:40px}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001s!important;transition-duration:.001s!important}}
+</style>
+</head>
+<body>
+
+<!-- particles -->
+<div id="ptcl"></div>
+
+<!-- confetti canvas -->
+<canvas id="cnv"></canvas>
+
+<!-- utility bar -->
+<div class="util-bar">
+  <button class="util-btn" id="btnAdmin" title="Admin / Webhook Setup">⚙️</button>
+  <button class="util-btn" id="btnAudio" title="Toggle Music">🔊</button>
+</div>
+
+<!-- ══════════════ LOBBY ══════════════ -->
+<div class="view on" id="vLobby">
+  <div class="lobby-wrap">
+    <div>
+      <div class="logo-mark">FAWZEER<br>TALABAT</div>
+      <div class="logo-sub" style="margin-top:4px">Leadership Principles Quest</div>
+    </div>
+    <div class="lp-pills">
+      <span class="lp-pill" style="animation-delay:.05s" title="Deliver Value Fast">⚡</span>
+      <span class="lp-pill" style="animation-delay:.12s" title="Dive Deep">📊</span>
+      <span class="lp-pill" style="animation-delay:.19s" title="Raise the Bar">🏆</span>
+      <span class="lp-pill" style="animation-delay:.26s" title="Own It">💪</span>
+      <span class="lp-pill" style="animation-delay:.33s" title="Stay Humble">🙏</span>
+      <span class="lp-pill" style="animation-delay:.40s" title="Bring Good Vibes">✨</span>
+    </div>
+    <div class="card form-card" id="formCard">
+      <div>
+        <label class="lbl" for="inpName">Full Name</label>
+        <input class="inp" id="inpName" type="text" placeholder="e.g. Sara Al-Mansoor" autocomplete="name"/>
+        <div class="err" id="errName">Please enter your full name</div>
+      </div>
+      <div>
+        <label class="lbl" for="inpEmail">Work Email</label>
+        <input class="inp" id="inpEmail" type="email" placeholder="e.g. sara@talabat.com" autocomplete="email"/>
+        <div class="err" id="errEmail">Please provide a valid work email</div>
+      </div>
+      <button class="btn btn-primary" id="btnStart">
+        <span>⚡ ENTER THE ARENA</span>
+        <span id="btnSpinner" style="display:none">⏳</span>
+      </button>
+      <div style="font-size:11px;color:var(--cream2);text-align:center;font-weight:600">
+        🔒 One attempt per email · Score saved to live leaderboard
+      </div>
+    </div>
+    <div class="card already-card" id="alreadyCard" style="display:none">
+      <div class="trophy">🏆</div>
+      <div style="font-size:22px;font-weight:800;color:var(--gold)" id="alreadyName">Welcome back!</div>
+      <div style="font-size:14px;color:var(--cream2);font-weight:600">You've already conquered Fawzeer Talabat.</div>
+      <div class="already-score" id="alreadyScore">0</div>
+      <div class="logo-sub" style="font-size:10px">YOUR FINAL SCORE</div>
+      <div style="font-size:13px;color:var(--cream2)">Your score is permanently on the leaderboard.</div>
+    </div>
+    <div class="admin-link" id="adminLink">🛡 Admin</div>
+  </div>
+</div>
+
+<!-- ══════════════ ROUND INTRO ══════════════ -->
+<div class="view" id="vIntro">
+  <div class="intro-wrap">
+    <div class="intro-rnum" id="iRoundNum">ROUND 1</div>
+    <div class="intro-rname" id="iRoundName">SPEED KNOWLEDGE</div>
+    <div class="intro-specs" id="iSpecs"></div>
+    <div class="intro-quote" id="iQuote">"Index on delivery — do stuff, don't talk about stuff."</div>
+    <div class="intro-count" id="iCount">3</div>
+    <button class="btn btn-ghost" id="btnSkip">Skip Countdown →</button>
+  </div>
+</div>
+
+<!-- ══════════════ GAME ══════════════ -->
+<div class="view" id="vGame">
+  <div class="game-wrap">
+    <!-- header -->
+    <div class="g-header">
+      <div class="g-brand">Fawzeer Talabat</div>
+      <div class="g-round-pill" id="gRound">R1: Speed Knowledge</div>
+      <div class="g-right">
+        <div class="streak" id="streak">🔥 <span id="streakN">×3</span></div>
+        <div class="g-score" id="gScore">0 <span style="font-size:11px;color:var(--cream2);font-weight:400">pts</span></div>
+      </div>
+    </div>
+    <!-- progress -->
+    <div class="g-progress"><div class="g-progress-fill" id="gProg" style="width:0%"></div></div>
+    <!-- timer -->
+    <div class="g-timer">
+      <div class="g-timer-lbl">TIME</div>
+      <div class="g-timer-track"><div class="g-timer-fill" id="gTimerFill" style="width:100%"></div></div>
+      <div class="g-timer-num" id="gTimerNum">20s</div>
+    </div>
+    <!-- question -->
+    <div class="g-question" id="gQCard">
+      <div class="q-meta">
+        <span class="q-num" id="gQNum">Q1/10</span>
+        <span class="q-dept" id="gDept">Product</span>
+      </div>
+      <div class="q-text" id="gQText">Loading…</div>
+    </div>
+    <!-- answers -->
+    <div class="g-answers" id="gAnswers"></div>
+  </div>
+</div>
+
+<!-- feedback toast -->
+<div id="toast">
+  <div class="toast-inner" id="toastInner">
+    <div class="toast-top">
+      <div class="toast-verdict" id="tVerdict">✅ Owned It!</div>
+      <div class="toast-badges">
+        <span class="toast-dept" id="tDept">Operations</span>
+        <span class="toast-lp" id="tLP">🎯 LP: Deliver Value Fast</span>
+      </div>
+    </div>
+    <div class="toast-text" id="tText">Index on delivery.</div>
+    <div class="toast-row">
+      <button class="btn-next" id="btnNext">Next Question →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ END ══════════════ -->
+<div class="view" id="vEnd">
+  <div class="end-wrap">
+    <div class="end-hero">
+      <span class="pill pill-orange">🏁 MATCH COMPLETE</span>
+      <div class="end-brand">FAWZEER TALABAT</div>
+      <div class="end-player" id="eName">Player</div>
+      <div class="end-score-big" id="eScore">0</div>
+      <div class="end-pts">POINTS</div>
+      <div class="end-acc" id="eAcc">0 / 0 correct · 0% accuracy</div>
+      <div class="end-tier" id="eTier">🥇 Gold Tier — LP Champion</div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-title">📊 Round Breakdown</div>
+      <div id="eBreakdown"></div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-title">🏆 Live Leaderboard <span class="pill pill-green" style="margin-left:auto;font-size:10px">Live</span></div>
+      <div id="eLB"></div>
+    </div>
+
+    <div class="end-actions">
+      <button class="btn btn-primary" id="eShare">🔥 Share Your Score</button>
+      <div style="font-size:12px;color:var(--green);font-weight:700;text-align:center;display:none" id="eCopied">✅ Copied to clipboard!</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ ADMIN MODAL ══════════════ -->
+<div class="modal-bg" id="adminModal">
+  <div class="modal">
+    <div class="modal-title">
+      <span>⚙️ Google Sheet Webhook</span>
+      <button class="util-btn" id="closeModal" style="font-size:14px">✕</button>
+    </div>
+    <p style="font-size:13px;color:var(--cream2)">Paste your deployed Apps Script Web App URL to sync scores to Google Sheets in real-time.</p>
+    <div>
+      <label class="lbl">Apps Script Webhook URL</label>
+      <input class="inp" id="webhookInp" type="url" placeholder="https://script.google.com/macros/s/.../exec"/>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-primary" id="saveWebhook" style="flex:1;font-size:13px;padding:10px">Save & Test</button>
+      <button class="util-btn" id="resetPlay" title="Clear play lock for testing" style="width:auto;padding:0 14px;font-size:12px;font-weight:700;color:var(--cream);width:100px">Reset Lock</button>
+    </div>
+    <div style="font-size:12px;color:var(--gold);font-weight:700">📋 Code.gs — paste into Apps Script:</div>
+    <div class="code-block">function doPost(e){
+  var ss=SpreadsheetApp.getActiveSpreadsheet();
+  var sh=ss.getSheetByName("Scores")||ss.insertSheet("Scores");
+  if(sh.getLastRow()===0)sh.appendRow(["Timestamp","Name","Email","Score","Accuracy%","Device"]);
+  var d=JSON.parse(e.postData.contents);
+  sh.appendRow([new Date(),d.name,d.email,d.score,d.accuracy,d.device]);
+  return ContentService.createTextOutput(JSON.stringify({status:"ok"}))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+function doGet(e){
+  var p=e.parameter;
+  var sh=SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Scores");
+  if(!sh)return json({exists:false});
+  var rows=sh.getDataRange().getValues();
+  if(p.email){
+    for(var i=1;i<rows.length;i++){
+      if(rows[i][2]===p.email)return json({exists:true,name:rows[i][1],score:rows[i][3]});
+    }
+    return json({exists:false});
+  }
+  if(p.action==="lb"){
+    var lb=rows.slice(1).map(function(r){return{name:r[1],score:r[3]}})
+      .sort(function(a,b){return b.score-a.score}).slice(0,20);
+    return json({lb:lb});
+  }
+  return json({status:"ok"});
+}
+function json(o){
+  return ContentService.createTextOutput(JSON.stringify(o))
+    .setMimeType(ContentService.MimeType.JSON);
+}</div>
+    <ol style="font-size:12px;color:var(--cream2);padding-left:18px;line-height:1.7">
+      <li>Open script.google.com → New Project</li>
+      <li>Replace all code with the block above → Save</li>
+      <li>Deploy → New Deployment → Web App</li>
+      <li>Execute as: Me · Who has access: Anyone → Deploy</li>
+      <li>Copy the URL and paste above → Save & Test</li>
+    </ol>
+  </div>
+</div>
+
+<!-- audio -->
+<audio id="bgAudio" loop preload="none">
+  <source src="audio/game_music.mp3" type="audio/mpeg"/>
+  <source src="WhatsApp_Audio_2026-10-31_at_11_50_25_PM.mpeg" type="audio/mpeg"/>
+</audio>
+
+<script>
+'use strict';
+// ═══════════════════════════════════════════════════════════
+// FAWZEER TALABAT v4 — Full Game Engine
+// ═══════════════════════════════════════════════════════════
+
+// ── QUESTION BANK ──────────────────────────────────────────
+const ROUNDS=[
+{id:1,num:"ROUND 1",name:"SPEED KNOWLEDGE",type:"mc4",time:20,
+ quote:'"Do stuff, don\'t talk about stuff. Action always beats the deck."',
+ specs:["10 Questions","20s Each","4 Choices"],
+ questions:[
+  {dept:"Product & Tech",q:"Getting stuck in endless alignment meetings and review loops violates which principle?",opts:["Deliver Value Fast","Raise the Bar","Own It","Stay Humble"],a:"Deliver Value Fast",lp:"Deliver Value Fast",fb:"Index on delivery — do stuff, don't talk about stuff. Action beats the deck every time."},
+  {dept:"Logistics & Fleet",q:"Which principle are you living when you go deep into dispatch data to find root causes before deciding?",opts:["Dive Deep","Raise the Bar","Bring Good Vibes","Own It"],a:"Dive Deep",lp:"Dive Deep",fb:"Master the work. Know the details that matter. Truth lives on the frontline."},
+  {dept:"Partner Care",q:"Which principle means you take full responsibility — end to end — without being asked?",opts:["Stay Humble","Own It","Bring Good Vibes","Raise the Bar"],a:"Own It",lp:"Own It",fb:"See it through. End to end. No excuses. Build a 'Consider it done!' reputation."},
+  {dept:"People Experience",q:"'I disagree with this feedback but I am genuinely listening.' Which principle?",opts:["Bring Good Vibes","Stay Humble","Raise the Bar","Dive Deep"],a:"Stay Humble",lp:"Stay Humble",fb:"Stay open to being wrong. The best idea wins — not the biggest title."},
+  {dept:"Commercial",q:"Which principle says the standard you set today is not good enough for tomorrow?",opts:["Own It","Deliver Value Fast","Raise the Bar","Bring Good Vibes"],a:"Raise the Bar",lp:"Raise the Bar",fb:"Start with impossible. Do not settle. Challenge the default every single day."},
+  {dept:"People Experience",q:"Saving feedback for the annual review instead of sharing it now violates which principle?",opts:["Stay Humble","Raise the Bar","Deliver Value Fast","Bring Good Vibes"],a:"Raise the Bar",lp:"Raise the Bar",fb:"Feedback unlocks our bold moves. Share it in the moment — not once a year."},
+  {dept:"Culture & Comms",q:"'Playing politics, harboring hidden agendas, and talking behind backs.' Which principle Don't?",opts:["Own It","Stay Humble","Bring Good Vibes","Dive Deep"],a:"Bring Good Vibes",lp:"Bring Good Vibes",fb:"Be REAL. Be KIND. Political behaviour poisons team trust."},
+  {dept:"Operations",q:"According to company philosophy, where does the ultimate operational truth live?",opts:["In HQ dashboards","On the frontline","In the sprint review","In the strategy deck"],a:"On the frontline",lp:"Dive Deep",fb:"Go to the frontline — truth lives with customers, riders, partners, and in stores."},
+  {dept:"Leadership",q:"'You work for your team and we all work for the customer.' Which principle short description?",opts:["Bring Good Vibes","Own It","Stay Humble","Dive Deep"],a:"Stay Humble",lp:"Stay Humble",fb:"Flip the pyramid — your job is to serve your team and the frontline."},
+  {dept:"Growth & Product",q:"Deciding with 70% information and moving forward is a core habit of which principle?",opts:["Raise the Bar","Dive Deep","Own It","Deliver Value Fast"],a:"Deliver Value Fast",lp:"Deliver Value Fast",fb:"Prioritize speed over certainty. 70% is enough — course-correct fast."}
+ ]},
+{id:2,num:"ROUND 2",name:"ACT IT OUT",type:"mc6",time:25,
+ quote:'"Look in the mirror first. The best idea wins — not the biggest title."',
+ specs:["6 Scenarios","25s Each","Identify the LP"],
+ questions:[
+  {dept:"Logistics & Fleet",q:"During a flash flood, an ops manager visits hubs in person, inspects rider gear, re-routes batches on the ground, and audits dispatch logs line-by-line.",opts:["Deliver Value Fast","Bring Good Vibes","Raise the Bar","Dive Deep","Own It","Stay Humble"],a:"Dive Deep",lp:"Dive Deep",fb:"Frontline immersion and inspecting real conditions — Dive Deep at its finest."},
+  {dept:"Partner Care",q:"A restaurant's menu integration breaks 30 minutes before Iftar. An account manager stays on call, coordinates with engineers, manually updates 45 SKUs, and updates the merchant every 10 minutes.",opts:["Deliver Value Fast","Bring Good Vibes","Raise the Bar","Dive Deep","Own It","Stay Humble"],a:"Own It",lp:"Own It",fb:"Seeing it through end-to-end without making excuses — classic Own It."},
+  {dept:"Product & Engineering",q:"Rather than spending 4 months building a full promotions engine, a squad releases a clean 3-day MVP experiment to validate merchant uptake.",opts:["Deliver Value Fast","Bring Good Vibes","Raise the Bar","Dive Deep","Own It","Stay Humble"],a:"Deliver Value Fast",lp:"Deliver Value Fast",fb:"Action beats the deck. Ship small, test value with real users, and iterate rapidly."},
+  {dept:"People & Culture",q:"Tensions flare between Sales and Logistics over peak capacity. A facilitator steps in, eliminates finger-pointing, and brings genuine psychological safety to the room.",opts:["Deliver Value Fast","Bring Good Vibes","Raise the Bar","Dive Deep","Own It","Stay Humble"],a:"Bring Good Vibes",lp:"Bring Good Vibes",fb:"Be REAL, be KIND. Energizing the room and building collaborative safety — Bring Good Vibes."},
+  {dept:"Commercial & Growth",q:"The quarterly target was hit at 105%. Instead of celebrating early, the lead benchmarks against world-class standards and raises next quarter's quality bar.",opts:["Deliver Value Fast","Bring Good Vibes","Raise the Bar","Dive Deep","Own It","Stay Humble"],a:"Raise the Bar",lp:"Raise the Bar",fb:"Do not settle. Challenge default benchmarks. What worked yesterday is not enough for tomorrow."},
+  {dept:"Finance & Strategy",q:"A VP admits their forecasted model was inaccurate and actively adopts a junior data scientist's alternate framework in front of the executive committee.",opts:["Deliver Value Fast","Bring Good Vibes","Raise the Bar","Dive Deep","Own It","Stay Humble"],a:"Stay Humble",lp:"Stay Humble",fb:"The best idea wins — not the highest title. Zero ego, objective pursuit of truth."}
+ ]},
+{id:3,num:"ROUND 3",name:"HANGMAN QUEST",type:"hangman",time:30,
+ quote:'"Letters unlock every 5s. Name the principle before time expires!"',
+ specs:["3 Hidden LPs","30s Each","Points Decay as Letters Reveal"],
+ questions:[
+  {dept:"Operations & Fleet",q:"A foundational principle is being revealed letter by letter. Name it before time runs out!",word:"OWN IT",lp:"Own It",fb:"Own It — Turn every stone. See it through end-to-end. No excuses.",hint:"Complete accountability. The buck stops with you."},
+  {dept:"Data & Frontline",q:"Watch the letters appear one by one. Which principle is hiding here?",word:"DIVE DEEP",lp:"Dive Deep",fb:"Dive Deep — Truth lives on the frontline with customers, riders, and partners.",hint:"Go to the source. Inspect details that matter."},
+  {dept:"Quality & Standards",q:"Letters are revealing. Can you name this principle before all slots open?",word:"RAISE THE BAR",lp:"Raise the Bar",fb:"Raise the Bar — Start with impossible. Feedback unlocks our bold moves.",hint:"The standard you set today won't be enough tomorrow."}
+ ]},
+{id:4,num:"ROUND 4",name:"TRUE OR FALSE",type:"tf",time:15,
+ quote:'"Debate the idea, never the person. Quick instincts, sharp clarity."',
+ specs:["12 Statements","15s Each","Lightning Pace"],
+ questions:[
+  {dept:"Product & Engineering",q:"Releasing an untested, broken hotfix to hit a sprint deadline is aligned with moving fast.",a:false,lp:"Deliver Value Fast",fb:"FALSE — Deliver Value Fast requires working value. Speed and quality are not mutually exclusive."},
+  {dept:"Logistics & Fleet",q:"When delivery delays spike, an operations lead should personally inspect the sorting bay and batching algorithm.",a:true,lp:"Dive Deep",fb:"TRUE — Dive Deep means going to the source and understanding real frontline conditions."},
+  {dept:"Partner Care",q:"Under complete accountability, an account manager's responsibility ends the second a ticket is passed to technical support.",a:false,lp:"Own It",fb:"FALSE — Own It means end-to-end follow-through until the issue is fully resolved."},
+  {dept:"Commercial & Sales",q:"Challenging industry defaults and establishing higher retention benchmarks applies to all levels, not just senior directors.",a:true,lp:"Raise the Bar",fb:"TRUE — Raise the Bar is a universal daily standard for every employee across all functions."},
+  {dept:"People Experience",q:"Fostering positive team energy means sugarcoating critical performance feedback to avoid difficult feelings.",a:false,lp:"Bring Good Vibes",fb:"FALSE — Be REAL and KIND. Hard on problems, respectful of people. Direct honest feedback is kindness."},
+  {dept:"Finance & Procurement",q:"Scrutinizing supplier invoices line-by-line before releasing vendor payouts exemplifies the 'details that matter.'",a:true,lp:"Dive Deep",fb:"TRUE — Financial rigor and zero-waste auditing embody Dive Deep in action."},
+  {dept:"Product & Design",q:"Waiting for 100% data certainty before shipping an MVP checkout improvement is recommended.",a:false,lp:"Deliver Value Fast",fb:"FALSE — 70% certainty is enough. Decide, ship small, and iterate fast."},
+  {dept:"People & Leadership",q:"Listening attentively and adopting a junior colleague's stronger solution demonstrates true leadership maturity.",a:true,lp:"Stay Humble",fb:"TRUE — Stay Humble: The best idea always wins, never the biggest title."},
+  {dept:"Operations & Safety",q:"A rider hub lead who spots a safety gear shortage should escalate with concrete vendor solutions — not just the problem.",a:true,lp:"Own It",fb:"TRUE — Own It means escalating early with proposed answers, not just flagging problems."},
+  {dept:"Commercial & Marketing",q:"Hitting quarterly GMV targets means the team can freeze campaign optimizations for the remainder of the quarter.",a:false,lp:"Raise the Bar",fb:"FALSE — Raise the Bar means continuously striving for excellence, challenging 'good enough.'"},
+  {dept:"Cross-Functional",q:"Exchanging polite agreements in meetings while harboring private resentments demonstrates good team harmony.",a:false,lp:"Bring Good Vibes",fb:"FALSE — Hidden agendas poison culture. Bring Good Vibes means being open, honest, and transparent."},
+  {dept:"Logistics Operations",q:"Frontline dispatch data is only relevant for central engineering teams, not for daily fleet leads.",a:false,lp:"Dive Deep",fb:"FALSE — Every operational role must master the frontline data governing their work."}
+ ]},
+{id:5,num:"ROUND 5",name:"RAPID FIRE FINALE",type:"mc6",time:10,
+ quote:'"Maximum pressure. 10 seconds per dilemma. Leave nothing on the table!"',
+ specs:["8 Final Tests","10s Each","Maximum Pressure"],
+ questions:[
+  {dept:"Product & Tech",q:"A tech lead rolls back immediately after a checkout latency spike during peak dinner hour, alerts stakeholders, and organizes root-cause analysis within 1 hour.",opts:["Deliver Value Fast","Bring Good Vibes","Raise the Bar","Dive Deep","Own It","Stay Humble"],a:"Own It",lp:"Own It",fb:"Own It — Immediate accountability, zero excuses, and seeing the resolution through."},
+  {dept:"Logistics & Fleet",q:"A coordinator analyzes heatmaps, rides along on a motorcycle, and uncovers a blocked side street causing 4-minute delays in Zone B.",opts:["Deliver Value Fast","Bring Good Vibes","Raise the Bar","Dive Deep","Own It","Stay Humble"],a:"Dive Deep",lp:"Dive Deep",fb:"Dive Deep — Truth lives on the frontline. Hands-on investigation beats armchair guessing."},
+  {dept:"Commercial & Growth",q:"A growth lead assembles a 24-hour tactical campaign in response to a competitor's merchant subsidy — rather than waiting for quarterly budget reviews.",opts:["Deliver Value Fast","Bring Good Vibes","Raise the Bar","Dive Deep","Own It","Stay Humble"],a:"Deliver Value Fast",lp:"Deliver Value Fast",fb:"Deliver Value Fast — Prioritize agility and speed over endless committee cycles."},
+  {dept:"People & Culture",q:"A manager diffuses hostility between squads with humor, active listening, and refocuses both teams on customer impact.",opts:["Deliver Value Fast","Bring Good Vibes","Raise the Bar","Dive Deep","Own It","Stay Humble"],a:"Bring Good Vibes",lp:"Bring Good Vibes",fb:"Bring Good Vibes — Make it easy to work together. Positive culture accelerates team velocity."},
+  {dept:"Partner Care",q:"A squad's vendor satisfaction score is 89% (meeting internal target). They refuse to celebrate, benchmarking against world-class 96% standards instead.",opts:["Deliver Value Fast","Bring Good Vibes","Raise the Bar","Dive Deep","Own It","Stay Humble"],a:"Raise the Bar",lp:"Raise the Bar",fb:"Raise the Bar — Do not settle for average benchmarks. Challenge the default."},
+  {dept:"Finance & Procurement",q:"An operations lead spots a low-value SaaS subscription and personally cancels and renegotiates the tier, saving $40k — without being asked.",opts:["Deliver Value Fast","Bring Good Vibes","Raise the Bar","Dive Deep","Own It","Stay Humble"],a:"Own It",lp:"Own It",fb:"Own It — Treat company resources like your own. Step up without waiting to be prompted."},
+  {dept:"Executive Leadership",q:"A senior executive spends half a day every month packing grocery orders in a dark store to stay grounded in everyday operational reality.",opts:["Deliver Value Fast","Bring Good Vibes","Raise the Bar","Dive Deep","Own It","Stay Humble"],a:"Stay Humble",lp:"Stay Humble",fb:"Stay Humble — Flip the pyramid. Serve the frontline and stay connected with real operations."},
+  {dept:"Operations & Dispatch",q:"A temporary batching workflow is implemented today to alleviate rain backlog, while the long-term automated fix is scheduled next month.",opts:["Deliver Value Fast","Bring Good Vibes","Raise the Bar","Dive Deep","Own It","Stay Humble"],a:"Deliver Value Fast",lp:"Deliver Value Fast",fb:"Deliver Value Fast — Ship immediate relief now. Action beats waiting for a perfect future fix."}
+ ]}
+];
+const TOTAL_Q=ROUNDS.reduce((s,r)=>s+r.questions.length,0); // 39
+
+// ── STATE ───────────────────────────────────────────────────
+const G={
+  name:'',email:'',device:'',
+  score:0,streak:0,correctQ:0,totalQ:0,
+  roundScores:[0,0,0,0,0],roundCorrect:[0,0,0,0,0],
+  ri:0,qi:0,
+  timerID:null,hangRevealID:null,cdID:null,
+  timeLeft:0,maxTime:0,
+  answering:false,
+  audioOn:true,audioCtx:null,
+  webhook:localStorage.getItem('fawzeer_wh')||'',
+  hangRevealed:[],hangWord:''
+};
+
+// ── AUDIO ────────────────────────────────────────────────────
+function actx(){
+  if(!G.audioCtx){
+    const C=window.AudioContext||window.webkitAudioContext;
+    if(C) G.audioCtx=new C();
+  }
+  if(G.audioCtx&&G.audioCtx.state==='suspended') G.audioCtx.resume();
+  return G.audioCtx;
+}
+function tone(f,tp,d,v){
+  if(!G.audioOn) return;
+  try{
+    const c=actx(); if(!c) return;
+    const o=c.createOscillator(),g=c.createGain();
+    o.type=tp; o.frequency.value=f;
+    g.gain.setValueAtTime(v,c.currentTime);
+    g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+d);
+    o.connect(g); g.connect(c.destination);
+    o.start(); o.stop(c.currentTime+d);
+  }catch{}
+}
+// Built-in exciting music using Web Audio API oscillators
+function playBuiltInMusic(){
+  if(!G.audioOn) return;
+  try{
+    const c=actx(); if(!c) return;
+    // Energetic bass pulse
+    const notes=[110,110,165,220,165,110,130,110];
+    let t=c.currentTime;
+    const loop=()=>{
+      notes.forEach((f,i)=>{
+        const o=c.createOscillator(),g=c.createGain();
+        o.type='sawtooth'; o.frequency.value=f;
+        g.gain.setValueAtTime(0,t+i*.18);
+        g.gain.linearRampToValueAtTime(.04,t+i*.18+.05);
+        g.gain.linearRampToValueAtTime(0,t+i*.18+.16);
+        o.connect(g); g.connect(c.destination);
+        o.start(t+i*.18); o.stop(t+i*.18+.17);
+      });
+      // hi melody
+      const mel=[440,494,440,523,494,440,392,440];
+      mel.forEach((f,i)=>{
+        const o=c.createOscillator(),g=c.createGain();
+        o.type='triangle'; o.frequency.value=f;
+        g.gain.setValueAtTime(0,t+i*.18);
+        g.gain.linearRampToValueAtTime(.025,t+i*.18+.04);
+        g.gain.linearRampToValueAtTime(0,t+i*.18+.15);
+        o.connect(g); g.connect(c.destination);
+        o.start(t+i*.18); o.stop(t+i*.18+.16);
+      });
+      t+=notes.length*.18;
+    };
+    // Play 4 loops
+    for(let i=0;i<4;i++) setTimeout(loop,i*notes.length*180);
+  }catch{}
+}
+function sndCorrect(){tone(523,'sine',.1,.15);setTimeout(()=>tone(784,'sine',.18,.18),90)}
+function sndWrong(){tone(280,'sawtooth',.32,.1);setTimeout(()=>tone(180,'sawtooth',.2,.08),100)}
+function sndTick(){tone(880,'square',.06,.06)}
+function sndStreak(){[440,554,659].forEach((f,i)=>setTimeout(()=>tone(f,'triangle',.16,.14),i*80))}
+function sndFanfare(){[523,659,784,1047].forEach((f,i)=>setTimeout(()=>tone(f,'triangle',.26,.2),i*120))}
+function sndCountdown(n){tone(n>0?660:880,'sine',.18,.22)}
+const bgAudio=document.getElementById('bgAudio');
+function startBG(){if(!G.audioOn)return;bgAudio.volume=.32;bgAudio.play().catch(()=>playBuiltInMusic())}
+function toggleAudio(){
+  G.audioOn=!G.audioOn;
+  document.getElementById('btnAudio').textContent=G.audioOn?'🔊':'🔇';
+  if(!G.audioOn){bgAudio.pause();}else{startBG();}
+}
+document.getElementById('btnAudio').addEventListener('click',toggleAudio);
+window.addEventListener('click',()=>{actx();if(G.audioOn&&bgAudio.paused)startBG();},{once:true});
+
+// ── DEVICE FP ─────────────────────────────────────────────────
+(function(){
+  const s=[navigator.userAgent,screen.width,screen.height,navigator.language].join('|');
+  let h=0;for(let i=0;i<s.length;i++){h=(h<<5)-h+s.charCodeAt(i);h|=0;}
+  G.device='dev_'+Math.abs(h).toString(16);
+})();
+
+// ── PARTICLES ──────────────────────────────────────────────────
+(function(){
+  const c=document.getElementById('ptcl');
+  for(let i=0;i<22;i++){
+    const p=document.createElement('div');
+    p.className='ptcl';
+    const sz=Math.random()*7+4;
+    p.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;animation-duration:${Math.random()*10+8}s;animation-delay:${Math.random()*7}s;background:${Math.random()>.4?'var(--orange)':'var(--gold)'};`;
+    c.appendChild(p);
+  }
+})();
+
+// ── SCREENS ────────────────────────────────────────────────────
+function show(id){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  if(id==='vLobby'){document.getElementById('ptcl').style.display='block';}
+  else{document.getElementById('ptcl').style.display='none';}
+}
+
+// ── INIT ───────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded',()=>{
+  const played=localStorage.getItem('fawzeer_played');
+  if(played){
+    try{
+      const d=JSON.parse(played);
+      document.getElementById('alreadyName').textContent=`Welcome back, ${d.name||'Champion'}!`;
+      document.getElementById('alreadyScore').textContent=d.score||0;
+      document.getElementById('formCard').style.display='none';
+      document.getElementById('alreadyCard').style.display='flex';
+    }catch{}
+  }
+  if(G.webhook) document.getElementById('webhookInp').value=G.webhook;
+});
+
+// ── REGISTRATION ───────────────────────────────────────────────
+document.getElementById('btnStart').addEventListener('click',async()=>{
+  const nm=document.getElementById('inpName').value.trim();
+  const em=document.getElementById('inpEmail').value.trim().toLowerCase();
+  let ok=true;
+  if(!nm){document.getElementById('errName').style.display='block';ok=false;}
+  else document.getElementById('errName').style.display='none';
+  if(!em||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){document.getElementById('errEmail').style.display='block';ok=false;}
+  else document.getElementById('errEmail').style.display='none';
+  if(!ok) return;
+  G.name=nm; G.email=em;
+  const btn=document.getElementById('btnStart');
+  btn.disabled=true; document.getElementById('btnSpinner').style.display='inline';
+  if(G.webhook){
+    try{
+      const r=await fetch(`${G.webhook}?email=${encodeURIComponent(em)}`);
+      const d=await r.json();
+      if(d&&d.exists){showAlreadyPlayed(d.name||nm,d.score);btn.disabled=false;document.getElementById('btnSpinner').style.display='none';return;}
+    }catch{}
+  }
+  btn.disabled=false; document.getElementById('btnSpinner').style.display='none';
+  G.ri=0;G.qi=0;G.score=0;G.streak=0;G.correctQ=0;G.totalQ=0;
+  G.roundScores=[0,0,0,0,0];G.roundCorrect=[0,0,0,0,0];
+  startIntro(0);
+});
+function showAlreadyPlayed(name,score){
+  document.getElementById('alreadyName').textContent=`Welcome back, ${name}!`;
+  document.getElementById('alreadyScore').textContent=score||0;
+  document.getElementById('formCard').style.display='none';
+  document.getElementById('alreadyCard').style.display='flex';
+}
+
+// ── ROUND INTRO ────────────────────────────────────────────────
+function startIntro(ri){
+  const r=ROUNDS[ri];
+  document.getElementById('iRoundNum').textContent=r.num;
+  document.getElementById('iRoundName').textContent=r.name;
+  document.getElementById('iQuote').textContent=r.quote;
+  const sp=document.getElementById('iSpecs');
+  sp.innerHTML='';
+  r.specs.forEach(s=>{const el=document.createElement('span');el.className='pill pill-muted';el.textContent=s;sp.appendChild(el);});
+  show('vIntro');
+  bgAudio.volume=.12;
+  runCountdown(3,()=>{show('vGame');beginRound(ri);});
+}
+function runCountdown(from,cb){
+  const el=document.getElementById('iCount');
+  let n=from;
+  el.textContent=n; el.className='intro-count count-pop'; sndCountdown(n);
+  clearInterval(G.cdID);
+  G.cdID=setInterval(()=>{
+    n--;
+    el.className='intro-count';
+    void el.offsetWidth;
+    el.className='intro-count count-pop';
+    if(n>0){el.textContent=n;sndCountdown(n);}
+    else if(n===0){el.textContent='GO!';el.style.color='var(--green)';sndCountdown(0);}
+    else{clearInterval(G.cdID);el.style.color='var(--orange)';setTimeout(cb,200);}
+  },950);
+}
+document.getElementById('btnSkip').addEventListener('click',()=>{clearInterval(G.cdID);show('vGame');beginRound(G.ri);});
+
+// ── GAME ───────────────────────────────────────────────────────
+function beginRound(ri){
+  G.ri=ri; G.qi=0;
+  bgAudio.volume=.32;
+  document.getElementById('gRound').textContent=`R${ri+1}: ${ROUNDS[ri].name}`;
+  loadQ();
+}
+function loadQ(){
+  clearTimer(); clearHangReveal(); G.answering=false;
+  document.getElementById('toast').classList.remove('on');
+  document.getElementById('toast').style.display='none';
+  const r=ROUNDS[G.ri], q=r.questions[G.qi];
+  // header
+  updateHUD();
+  // question (no LP shown)
+  document.getElementById('gQNum').textContent=`Q${G.qi+1}/${r.questions.length}`;
+  document.getElementById('gDept').textContent=q.dept||'Core';
+  document.getElementById('gQText').textContent=q.q;
+  // animate question
+  const qc=document.getElementById('gQCard');
+  qc.style.animation='none';void qc.offsetWidth;qc.style.animation='fadeUp .35s cubic-bezier(.34,1.56,.64,1) both';
+  // answers
+  const ac=document.getElementById('gAnswers');
+  ac.innerHTML='';
+  if(r.type==='mc4') renderMC(q,4,ac);
+  else if(r.type==='mc6') renderMC(q,6,ac);
+  else if(r.type==='tf') renderTF(q,ac);
+  else if(r.type==='hangman') renderHangman(q,ac);
+  // timer
+  G.maxTime=r.time; G.timeLeft=r.time;
+  const tf=document.getElementById('gTimerFill');
+  tf.className='g-timer-fill';
+  tf.style.transition='none';tf.style.width='100%';
+  setTimeout(()=>{tf.style.transition=`width ${r.time}s linear`;tf.style.width='0%';},60);
+  document.getElementById('gTimerNum').textContent=r.time+'s';
+  document.getElementById('gTimerNum').className='g-timer-num';
+  startTimer(r);
+}
+function updateHUD(){
+  document.getElementById('gScore').innerHTML=`${G.score} <span style="font-size:11px;color:var(--cream2);font-weight:400">pts</span>`;
+  const sk=document.getElementById('streak');
+  if(G.streak>=3){sk.style.display='inline-flex';document.getElementById('streakN').textContent=`×${G.streak}`;}
+  else sk.style.display='none';
+  // progress
+  let done=0;for(let i=0;i<G.ri;i++)done+=ROUNDS[i].questions.length;
+  done+=G.qi;
+  document.getElementById('gProg').style.width=Math.round(done/TOTAL_Q*100)+'%';
+}
+function startTimer(r){
+  G.timerID=setInterval(()=>{
+    G.timeLeft--;
+    const pct=Math.max(0,G.timeLeft/G.maxTime*100);
+    const tn=document.getElementById('gTimerNum');
+    tn.textContent=G.timeLeft+'s';
+    const tf=document.getElementById('gTimerFill');
+    if(pct<=25){tf.className='g-timer-fill low';tn.className='g-timer-num low';sndTick();}
+    else if(pct<=50){tf.className='g-timer-fill mid';tn.className='g-timer-num';}
+    if(G.timeLeft<=0){clearTimer();if(!G.answering)timeUp();}
+  },1000);
+}
+function clearTimer(){if(G.timerID){clearInterval(G.timerID);G.timerID=null;}}
+function clearHangReveal(){if(G.hangRevealID){clearInterval(G.hangRevealID);G.hangRevealID=null;}}
+function timeUp(){
+  G.answering=true;
+  const q=ROUNDS[G.ri].questions[G.qi];
+  document.querySelectorAll('.opt,.tf-opt').forEach(b=>{b.classList.add('locked');
+    const t=b.dataset.val;
+    if(t==String(q.a)||t===q.a) b.classList.add('correct');
+    else b.classList.add('dim');
+  });
+  G.streak=0; sndWrong(); G.totalQ++;
+  showToast(false,0,q);
+}
+
+// ── MC ──────────────────────────────────────────────────────────
+function renderMC(q,count,ac){
+  const grid=document.createElement('div');
+  grid.className=count===4?'grid-mc4':'grid-mc6';
+  const letters=['A','B','C','D','E','F'];
+  // shuffle
+  const shuffled=[...q.opts].sort(()=>Math.random()-.5);
+  shuffled.forEach((opt,i)=>{
+    const b=document.createElement('button');
+    b.className='opt';
+    b.dataset.val=opt;
+    b.innerHTML=`<span class="opt-ltr">${letters[i]}</span><span>${opt}</span>`;
+    b.addEventListener('click',()=>{if(!G.answering)pickMC(opt,q,shuffled,grid);});
+    grid.appendChild(b);
+  });
+  ac.appendChild(grid);
+}
+function pickMC(chosen,q,opts,grid){
+  G.answering=true; clearTimer(); G.totalQ++;
+  const correct=chosen===q.a;
+  grid.querySelectorAll('.opt').forEach(b=>{
+    b.classList.add('locked');
+    if(b.dataset.val===q.a) b.classList.add('correct');
+    else if(b.dataset.val===chosen&&!correct) b.classList.add('wrong');
+    else b.classList.add('dim');
+  });
+  const spd=Math.round(G.timeLeft/G.maxTime*50);
+  const pts=correct?100+spd:0;
+  processResult(correct,pts,q);
+}
+
+// ── TF ──────────────────────────────────────────────────────────
+function renderTF(q,ac){
+  const grid=document.createElement('div');
+  grid.className='grid-tf';
+  const make=(val,icon,lbl,cls)=>{
+    const b=document.createElement('button');
+    b.className=`opt tf-opt ${cls}`;
+    b.dataset.val=String(val);
+    b.innerHTML=`<span class="tf-icon">${icon}</span>${lbl}`;
+    b.addEventListener('click',()=>{if(!G.answering)pickTF(val,q,grid);});
+    return b;
+  };
+  grid.appendChild(make(true,'✓','TRUE','tf-t'));
+  grid.appendChild(make(false,'✗','FALSE','tf-f'));
+  ac.appendChild(grid);
+}
+function pickTF(chosen,q,grid){
+  G.answering=true; clearTimer(); G.totalQ++;
+  const correct=chosen===q.a;
+  grid.querySelectorAll('.opt').forEach(b=>{
+    b.classList.add('locked');
+    const bv=b.dataset.val==='true';
+    if(bv===q.a) b.classList.add('correct');
+    else if(bv===chosen&&!correct) b.classList.add('wrong');
+    else b.classList.add('dim');
+  });
+  const spd=Math.round(G.timeLeft/G.maxTime*30);
+  const pts=correct?80+spd:0;
+  processResult(correct,pts,q);
+}
+
+// ── HANGMAN ─────────────────────────────────────────────────────
+function renderHangman(q,ac){
+  G.hangWord=q.word.toUpperCase();
+  G.hangRevealed=G.hangWord.split('').map(c=>c===' ');
+  const box=document.createElement('div');
+  box.className='grid-hang';
+  const wordDiv=document.createElement('div');
+  wordDiv.className='hang-word';
+  wordDiv.id='hangWord';
+  renderHangSlots(wordDiv);
+  const hint=document.createElement('div');
+  hint.className='hang-hint';
+  hint.textContent=`💡 Hint: ${q.hint}`;
+  const row=document.createElement('div');
+  row.className='hang-input-row';
+  const inp=document.createElement('input');
+  inp.className='hang-inp'; inp.id='hangInp'; inp.placeholder='Type the full principle name…';
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&!G.answering)submitHang(q);});
+  const sub=document.createElement('button');
+  sub.className='hang-sub'; sub.textContent='GUESS';
+  sub.addEventListener('click',()=>{if(!G.answering)submitHang(q);});
+  row.appendChild(inp); row.appendChild(sub);
+  box.appendChild(wordDiv); box.appendChild(hint); box.appendChild(row);
+  ac.appendChild(box);
+  G.hangRevealID=setInterval(()=>{if(!G.answering)revealOne(wordDiv);},5000);
+}
+function renderHangSlots(div){
+  div.innerHTML='';
+  G.hangWord.split('').forEach((c,i)=>{
+    const sl=document.createElement('div');
+    sl.className=c===' '?'hang-space':'hang-slot';
+    if(G.hangRevealed[i]&&c!==' '){sl.textContent=c;sl.classList.add('lit');}
+    div.appendChild(sl);
+  });
+}
+function revealOne(div){
+  const hidden=G.hangWord.split('').reduce((a,c,i)=>{if(c!==' '&&!G.hangRevealed[i])a.push(i);return a;},[]);
+  if(!hidden.length) return;
+  const pick=hidden[Math.floor(Math.random()*hidden.length)];
+  const ch=G.hangWord[pick];
+  G.hangWord.split('').forEach((_,i)=>{if(G.hangWord[i]===ch)G.hangRevealed[i]=true;});
+  renderHangSlots(div); sndTick();
+}
+function submitHang(q){
+  const ans=(document.getElementById('hangInp')?.value||'').trim().toUpperCase().replace(/\s+/g,' ');
+  const target=q.word.toUpperCase();
+  const correct=ans===target||ans===q.lp.toUpperCase();
+  clearHangReveal(); G.answering=true; G.totalQ++;
+  const wd=document.getElementById('hangWord');
+  G.hangRevealed=G.hangRevealed.map(()=>true);
+  if(wd){
+    wd.querySelectorAll('.hang-slot').forEach((sl,i)=>{
+      const c=G.hangWord[i];
+      if(c&&c!==' '){sl.textContent=c;sl.className='hang-slot lit';sl.style.color=correct?'var(--green)':'var(--red)';}
+    });
+  }
+  const revealed=G.hangRevealed.filter((v,i)=>G.hangWord[i]!==' ').filter(Boolean).length;
+  const total=G.hangWord.replace(/ /g,'').length;
+  const spd=Math.round(G.timeLeft/G.maxTime*40);
+  const pts=correct?Math.max(60,Math.round((1-revealed/total)*80)+spd):0;
+  processResult(correct,pts,q);
+}
+
+// ── RESULT ─────────────────────────────────────────────────────
+function processResult(correct,pts,q){
+  if(correct){
+    G.score+=pts; G.streak++; G.correctQ++;
+    G.roundScores[G.ri]+=pts; G.roundCorrect[G.ri]++;
+    sndCorrect();
+    if(G.streak>=3&&G.streak%3===0) setTimeout(sndStreak,300);
+    // score flash
+    const el=document.getElementById('gScore');
+    el.classList.remove('score-flash');void el.offsetWidth;el.classList.add('score-flash');
+    confettiBurst(8);
+  } else {
+    G.streak=0; sndWrong();
+    const qc=document.getElementById('gQCard');
+    qc.style.animation='none';void qc.offsetWidth;qc.style.animation='shake .32s ease';
+  }
+  updateHUD();
+  showToast(correct,pts,q);
+}
+function showToast(correct,pts,q){
+  const ti=document.getElementById('toastInner');
+  const vd=document.getElementById('tVerdict');
+  const lp=document.getElementById('tLP');
+  const dp=document.getElementById('tDept');
+  const tx=document.getElementById('tText');
+  ti.className='toast-inner '+(correct?'toast-correct':'toast-wrong');
+  vd.className='toast-verdict '+(correct?'ok':'no');
+  vd.textContent=correct?`✅ Owned It! +${pts} pts`:'❌ Not this time — 0 pts';
+  // LP revealed ONLY here
+  lp.textContent=`🎯 LP: ${q.lp}`;
+  dp.textContent=q.dept||'Core';
+  tx.textContent=q.fb;
+  const t=document.getElementById('toast');
+  t.style.display='flex'; t.classList.remove('on'); void t.offsetWidth; t.classList.add('on');
+}
+document.getElementById('btnNext').addEventListener('click',nextQ);
+function nextQ(){
+  document.getElementById('toast').classList.remove('on');
+  document.getElementById('toast').style.display='none';
+  G.qi++;
+  const r=ROUNDS[G.ri];
+  if(G.qi<r.questions.length){loadQ();}
+  else{
+    G.ri++;
+    if(G.ri<ROUNDS.length){startIntro(G.ri);}
+    else{endGame();}
+  }
+}
+
+// ── END ────────────────────────────────────────────────────────
+async function endGame(){
+  clearTimer(); clearHangReveal();
+  document.getElementById('toast').style.display='none';
+  bgAudio.pause(); sndFanfare(); confettiBurst(70);
+  // save
+  try{localStorage.setItem('fawzeer_played',JSON.stringify({name:G.name,email:G.email,score:G.score,ts:Date.now()}));}catch{}
+  // render
+  document.getElementById('eName').textContent=G.name||'Player';
+  const acc=G.totalQ?Math.round(G.correctQ/G.totalQ*100):0;
+  document.getElementById('eAcc').textContent=`${G.correctQ} / ${G.totalQ} correct · ${acc}% accuracy`;
+  const tier=acc>=85?'🥇 Gold Tier — LP Champion':acc>=70?'🥈 Silver Tier — Rising Leader':acc>=50?'🥉 Bronze Tier — Value Cadet':'🪵 Keep Practicing!';
+  document.getElementById('eTier').textContent=tier;
+  // animated score
+  let cur=0; const target=G.score;
+  const si=setInterval(()=>{cur+=Math.ceil((target-cur)*.12)||1;if(cur>=target){cur=target;clearInterval(si);}document.getElementById('eScore').textContent=cur;},20);
+  // breakdown
+  const bd=document.getElementById('eBreakdown');
+  bd.innerHTML='';
+  ROUNDS.forEach((r,i)=>{
+    const maxEst=r.questions.length*120;
+    const got=G.roundScores[i];
+    const pct=Math.min(100,Math.round(got/maxEst*100));
+    bd.innerHTML+=`<div class="breakdown-row"><div class="br-name" title="${r.name}">R${r.id}: ${r.name}</div><div class="br-track"><div class="br-fill" style="width:0%" data-pct="${pct}"></div></div><div class="br-pts">${got}pts</div></div>`;
+  });
+  setTimeout(()=>{document.querySelectorAll('.br-fill').forEach(b=>b.style.width=b.dataset.pct+'%');},200);
+  show('vEnd');
+  // post to sheet
+  if(G.webhook){
+    try{
+      await fetch(G.webhook,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:G.name,email:G.email,score:G.score,accuracy:acc,device:G.device})});
+      const lb=await(await fetch(`${G.webhook}?action=lb`)).json();
+      if(lb&&lb.lb) renderLB(lb.lb);
+      else renderMockLB();
+    }catch{renderMockLB();}
+  } else renderMockLB();
+}
+function renderMockLB(){
+  const mock=[
+    {name:'Ahmed K. (Logistics)',score:4120},
+    {name:'Mariam S. (Rider Ops)',score:3890},
+    {name:'Tariq Z. (Engineering)',score:3650},
+    {name:G.name||'You',score:G.score,me:true},
+    {name:'Fatima N. (Product)',score:3410},
+    {name:'Omar H. (Commercial)',score:2890}
+  ].sort((a,b)=>b.score-a.score);
+  renderLB(mock);
+}
+function renderLB(list){
+  const container=document.getElementById('eLB');
+  container.innerHTML='';
+  const medals=['🥇','🥈','🥉'];
+  list.slice(0,10).forEach((p,i)=>{
+    const isMe=p.me||(p.name===G.name);
+    const row=document.createElement('div');
+    row.className='lb-row'+(isMe?' me':'');
+    row.innerHTML=`<div class="lb-rank">${medals[i]||`#${i+1}`}</div><div class="lb-name">${p.name}${isMe?' (You)':''}</div><div class="lb-pts">${p.score} pts</div>`;
+    container.appendChild(row);
+  });
+}
+document.getElementById('eShare').addEventListener('click',()=>{
+  const acc=G.totalQ?Math.round(G.correctQ/G.totalQ*100):0;
+  const msg=`⚡ I scored ${G.score} pts (${acc}% accuracy) on Fawzeer Talabat — Leadership Principles Quest! Can you raise the bar? #TalabatLPs #FawzeerTalabat`;
+  navigator.clipboard?.writeText(msg).catch(()=>{});
+  const c=document.getElementById('eCopied');
+  c.style.display='block';setTimeout(()=>c.style.display='none',3000);
+});
+
+// ── CONFETTI ────────────────────────────────────────────────────
+function confettiBurst(n){
+  const canvas=document.getElementById('cnv');
+  canvas.width=window.innerWidth; canvas.height=window.innerHeight;
+  const ctx=canvas.getContext('2d');
+  const cols=['#ff5a00','#f8bd4b','#ffdcc0','#4ae176','#ffffff','#ff9d6e'];
+  const ps=[];
+  for(let i=0;i<n;i++){
+    ps.push({x:window.innerWidth/2+(Math.random()-.5)*120,y:window.innerHeight*.45,
+      vx:(Math.random()-.5)*16,vy:(Math.random()*-13)-5,
+      sz:Math.random()*9+5,col:cols[Math.floor(Math.random()*cols.length)],
+      rot:Math.random()*360,rs:(Math.random()-.5)*9,op:1});
+  }
+  let f=0;
+  const anim=()=>{
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    let alive=false;
+    ps.forEach(p=>{
+      p.x+=p.vx; p.y+=p.vy; p.vy+=.3; p.rot+=p.rs; p.op-=.008;
+      if(p.op>0&&p.y<canvas.height+20){
+        alive=true;
+        ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot*Math.PI/180);
+        ctx.fillStyle=p.col;ctx.globalAlpha=Math.max(0,p.op);
+        ctx.fillRect(-p.sz/2,-p.sz/2,p.sz,p.sz*1.4);ctx.restore();
+      }
+    });
+    f++;
+    if(alive&&f<220) requestAnimationFrame(anim);
+    else ctx.clearRect(0,0,canvas.width,canvas.height);
+  };
+  anim();
+}
+window.addEventListener('resize',()=>{const c=document.getElementById('cnv');c.width=window.innerWidth;c.height=window.innerHeight;});
+
+// ── ADMIN ────────────────────────────────────────────────────────
+document.getElementById('btnAdmin').addEventListener('click',()=>{document.getElementById('adminModal').classList.add('on');});
+document.getElementById('adminLink').addEventListener('click',()=>{document.getElementById('adminModal').classList.add('on');});
+document.getElementById('closeModal').addEventListener('click',()=>{document.getElementById('adminModal').classList.remove('on');});
+document.getElementById('saveWebhook').addEventListener('click',()=>{
+  const url=document.getElementById('webhookInp').value.trim();
+  G.webhook=url; localStorage.setItem('fawzeer_wh',url);
+  document.getElementById('saveWebhook').textContent='✅ Saved!';
+  setTimeout(()=>{document.getElementById('saveWebhook').textContent='Save & Test';},2000);
+  document.getElementById('adminModal').classList.remove('on');
+});
+document.getElementById('resetPlay').addEventListener('click',()=>{
+  localStorage.removeItem('fawzeer_played');
+  location.reload();
+});
+</script>
+</body>
+</html>
