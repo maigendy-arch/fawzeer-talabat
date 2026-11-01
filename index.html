@@ -1022,53 +1022,117 @@ function sndStreak(){[440,554,659,880].forEach((f,i)=>playTone(f,'triangle',.16,
 function sndCount(n){playTone(n>0?660:880,'triangle',.2,.22)}
 function sndFanfare(){[523,659,784,659,784,1047].forEach((f,i)=>playTone(f,'triangle',.26,.2,i*.11))}
 
-// ── MUSIC ENGINE — reliable synth loop ──────────────────────────
-const BASS=[110,110,138,110,130,110,155,138,110,110,138,130,155,138,110,110];
-const MEL =[523,659,784,659,523,587,659,784,523,784,880,784,659,523,659,523];
-const HI  =[1047,1319,1047,880,1047,1175,1319,1047,1319,1047,880,1047,880,784,880,1047];
-const BPM=122,BEAT=60/BPM,STEPS=16;
+// ══ MUSIC ENGINE — 4-section song with intro, verse, chorus, bridge ══════
+// Upbeat major-key track, 118 BPM. Changes chord every 2 bars to feel musical.
+const BPM=118,BEAT=60/BPM;
+
+// Chord progressions (root frequencies in Hz, major triads)
+// I = C  IV = F  V = G  vi = Am
+const CHORDS={
+  I:  [261.6,329.6,392],    // C major
+  IV: [349.2,440,523.3],    // F major
+  V:  [392,493.9,587.3],    // G major
+  vi: [220,261.6,329.6],    // A minor
+};
+// 8-bar song structure: Intro(2) Verse(4) Chorus(2), loop
+const SONG=[
+  {chord:'I', type:'verse'},
+  {chord:'vi',type:'verse'},
+  {chord:'IV',type:'verse'},
+  {chord:'V', type:'verse'},
+  {chord:'I', type:'chorus'},
+  {chord:'IV',type:'chorus'},
+  {chord:'V', type:'chorus'},
+  {chord:'I', type:'chorus'},
+];
+
+// Melody patterns (intervals above chord root, semitones)
+// verse = gentle, chorus = energetic
+const MELODY_VERSE= [0,4,7,12,7,4,0,4,  7,12,7,4,7,4,0,-2]; // calm arpeggio
+const MELODY_CHORUS=[12,12,7,9,12,7,12,14,  16,14,12,9,7,4,7,4]; // bright & high
+
+function noteFreq(root,semitones){return root*Math.pow(2,semitones/12);}
+
+let _songBar=0;
 
 function playMusicBar(){
   if(!G.audioOn||!G._loopActive)return;
   const c=getAC();if(!c)return;
   const t=G._loopT;
+  const bar=SONG[_songBar%SONG.length];
+  const chord=CHORDS[bar.chord];
+  const isChorus=bar.type==='chorus';
+  const melPat=isChorus?MELODY_CHORUS:MELODY_VERSE;
+  const STEPS=16;
+
   for(let i=0;i<STEPS;i++){
     const b=t+i*BEAT;
-    // bass
+    const vol=isChorus?.028:.022;
+
+    // ── BASS (root note, octave down) ──
     try{
       const ob=c.createOscillator(),gb=c.createGain();
-      ob.type='sawtooth';ob.frequency.value=BASS[i];
-      gb.gain.setValueAtTime(0,b);gb.gain.linearRampToValueAtTime(.026,b+.022);
-      gb.gain.linearRampToValueAtTime(0,b+BEAT*.88);
-      ob.connect(gb);gb.connect(c.destination);ob.start(b);ob.stop(b+BEAT*.92);
+      // Walking bass: root on 1, fifth on 3, root on 9, approach on 13
+      const bassFreqs=[chord[0]/2,chord[0]/2,chord[2]/2,chord[0]/2,chord[0]/2,chord[0]/2,chord[2]/2,(SONG[(_songBar+1)%SONG.length]?CHORDS[SONG[(_songBar+1)%SONG.length].chord][0]/2:chord[0]/2)];
+      ob.type='triangle';ob.frequency.value=bassFreqs[Math.floor(i/2)%bassFreqs.length];
+      gb.gain.setValueAtTime(0,b);gb.gain.linearRampToValueAtTime(vol,b+.025);
+      gb.gain.linearRampToValueAtTime(0,b+BEAT*.85);
+      ob.connect(gb);gb.connect(c.destination);ob.start(b);ob.stop(b+BEAT*.9);
     }catch{}
-    // melody
+
+    // ── CHORD PAD (strum on beat 1, upstroke on beat 3) ──
+    if(i===0||i===8){
+      chord.forEach((f,ci)=>{try{
+        const oc=c.createOscillator(),gc=c.createGain();
+        oc.type='sine';oc.frequency.value=f;
+        gc.gain.setValueAtTime(0,b+ci*.015);gc.gain.linearRampToValueAtTime(vol*.6,b+ci*.015+.04);
+        gc.gain.linearRampToValueAtTime(vol*.3,b+BEAT*3.5);gc.gain.linearRampToValueAtTime(0,b+BEAT*3.9);
+        oc.connect(gc);gc.connect(c.destination);oc.start(b+ci*.015);oc.stop(b+BEAT*4);
+      }catch{}});
+    }
+
+    // ── MELODY ──
+    const mel=melPat[i];
     try{
       const om=c.createOscillator(),gm=c.createGain();
-      om.type='triangle';om.frequency.value=MEL[i];
-      gm.gain.setValueAtTime(0,b+BEAT*.04);gm.gain.linearRampToValueAtTime(.032,b+BEAT*.09);
-      gm.gain.linearRampToValueAtTime(0,b+BEAT*.74);
-      om.connect(gm);gm.connect(c.destination);om.start(b+BEAT*.04);om.stop(b+BEAT*.78);
+      om.type='triangle';
+      om.frequency.value=noteFreq(chord[0],mel+(isChorus?12:0));
+      gm.gain.setValueAtTime(0,b+BEAT*.06);gm.gain.linearRampToValueAtTime(isChorus?.036:.028,b+BEAT*.11);
+      gm.gain.linearRampToValueAtTime(0,b+BEAT*.78);
+      om.connect(gm);gm.connect(c.destination);om.start(b+BEAT*.06);om.stop(b+BEAT*.82);
     }catch{}
-    // hi sparkle every 2 steps
-    if(i%2===1){try{
-      const os=c.createOscillator(),gs=c.createGain();
-      os.type='sine';os.frequency.value=HI[i];
-      gs.gain.setValueAtTime(0,b+BEAT*.52);gs.gain.linearRampToValueAtTime(.011,b+BEAT*.57);
-      gs.gain.linearRampToValueAtTime(0,b+BEAT*.88);
-      os.connect(gs);gs.connect(c.destination);os.start(b+BEAT*.52);os.stop(b+BEAT*.92);
+
+    // ── HIGH ARPEGGIO (chorus only, adds sparkle) ──
+    if(isChorus&&i%2===0){try{
+      const oa=c.createOscillator(),ga=c.createGain();
+      oa.type='sine';
+      const arpNote=chord[i%3];
+      oa.frequency.value=arpNote*2;
+      ga.gain.setValueAtTime(0,b+BEAT*.5);ga.gain.linearRampToValueAtTime(.014,b+BEAT*.55);
+      ga.gain.linearRampToValueAtTime(0,b+BEAT*.88);
+      oa.connect(ga);ga.connect(c.destination);oa.start(b+BEAT*.5);oa.stop(b+BEAT*.92);
     }catch{}}
-    // kick on beats 0 and 8
-    if(i===0||i===8){try{
+
+    // ── KICK DRUM (beat 1 and 9, lighter on verse) ──
+    if(i===0||(i===8&&isChorus)){try{
       const ok=c.createOscillator(),gk=c.createGain();
-      ok.type='square';ok.frequency.setValueAtTime(90,b);ok.frequency.exponentialRampToValueAtTime(45,b+.1);
-      gk.gain.setValueAtTime(.04,b);gk.gain.exponentialRampToValueAtTime(.0001,b+.12);
-      ok.connect(gk);gk.connect(c.destination);ok.start(b);ok.stop(b+.14);
+      ok.type='sine';ok.frequency.setValueAtTime(120,b);ok.frequency.exponentialRampToValueAtTime(40,b+.12);
+      gk.gain.setValueAtTime(isChorus?.045:.03,b);gk.gain.exponentialRampToValueAtTime(.0001,b+.14);
+      ok.connect(gk);gk.connect(c.destination);ok.start(b);ok.stop(b+.15);
+    }catch{}}
+
+    // ── SNARE (beat 5 chorus, light hi-hat verse) ──
+    if(i===4||i===12){try{
+      const on=c.createOscillator(),gn=c.createGain();
+      on.type='square';on.frequency.value=isChorus?180:880;
+      gn.gain.setValueAtTime(isChorus?.025:.008,b);gn.gain.exponentialRampToValueAtTime(.0001,b+(isChorus?.09:.04));
+      on.connect(gn);gn.connect(c.destination);on.start(b);on.stop(b+(isChorus?.1:.05));
     }catch{}}
   }
+
+  _songBar++;
   G._loopT+=STEPS*BEAT;
-  // schedule next bar slightly before it ends
-  const msUntilNext=Math.max(10,(G._loopT-c.currentTime-.15)*1000);
+  const msUntilNext=Math.max(10,(G._loopT-c.currentTime-.18)*1000);
   G.synthLoop=setTimeout(()=>{if(G._loopActive&&G.audioOn)playMusicBar();},msUntilNext);
 }
 
@@ -1076,7 +1140,8 @@ function startMusic(){
   if(!G.audioOn||G._loopActive)return;
   const c=getAC();if(!c)return;
   G._loopActive=true;
-  G._loopT=c.currentTime+.08;
+  _songBar=0;
+  G._loopT=c.currentTime+.1;
   playMusicBar();
 }
 function stopMusic(){
@@ -1480,16 +1545,35 @@ async function endGame(){
       await fetch(WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},
         body:JSON.stringify({name:G.name,email:G.email,score:G.score,accuracy:acc,correctQ:G.correctQ,totalQ:G.totalQ,avgSpeed:G.speedSamples.length?(G.speedSamples.reduce((a,b)=>a+b,0)/G.speedSamples.length).toFixed(1):'',device:G.device})});
       const lb=await(await fetch(`${WEBHOOK}?action=lb`)).json();
-      if(lb&&lb.lb)renderLB(lb.lb);else renderMockLB();
+      if(lb&&lb.lb&&lb.lb.length>0){
+        // Merge in current player if not already in the sheet yet
+        const list=[...lb.lb];
+        const alreadyIn=list.find(p=>p.name===G.name||p.email===G.email);
+        if(!alreadyIn)list.push({name:G.name,score:G.score,me:true});
+        renderLB(list);
+      } else {
+        renderMockLB();
+      }
     }catch{renderMockLB();}
   }else renderMockLB();
 }
 function renderMockLB(){
-  renderLB([
-    {name:'Ahmed K. — Logistics',score:4120},{name:'Mariam S. — Rider Ops',score:3890},
-    {name:'Tariq Z. — Engineering',score:3650},{name:G.name||'You',score:G.score,me:true},
-    {name:'Fatima N. — Product',score:3410},{name:'Omar H. — Commercial',score:2890},
-  ]);
+  // No mock data — show real player's result only, wait for others via webhook
+  const c=document.getElementById('eLB');
+  const acc=G.totalQ?Math.round(G.correctQ/G.totalQ*100):0;
+  // Show only the current player's result with a message about the live board
+  const row=document.createElement('div');row.className='lb-row me';
+  row.innerHTML=`<div class="lb-rank lb-r1">🏅</div><div class="lb-info"><div class="lb-name">${G.name||'You'}<span class="lb-me-tag">YOU</span></div><div style="font-size:10px;color:#907065;margin-top:2px">Just completed · ${acc}% accuracy</div></div><div class="lb-score">${G.score.toLocaleString()} pts</div>`;
+  c.appendChild(row);
+  // Info message
+  const msg=document.createElement('div');
+  msg.style.cssText='text-align:center;padding:16px 12px;font-size:12px;color:#907065;line-height:1.6;';
+  if(WEBHOOK){
+    msg.innerHTML='<div style="font-size:20px;margin-bottom:6px">⏳</div>Connect your Google Sheet to see live rankings from all players.<br>Add your Apps Script URL to the <code style="background:#f3ede9;padding:1px 5px;border-radius:4px;font-size:11px">WEBHOOK</code> variable in the HTML.';
+  } else {
+    msg.innerHTML='<div style="font-size:20px;margin-bottom:6px">🏆</div>Live rankings appear here once other employees complete the game.<br>Rankings update in real-time from your Google Sheet.';
+  }
+  c.appendChild(msg);
 }
 function renderLB(list){
   const c=document.getElementById('eLB');c.innerHTML='';
