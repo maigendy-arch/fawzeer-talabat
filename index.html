@@ -1557,18 +1557,48 @@ async function endGame(){
   // backend sync
   if(WEBHOOK){
     try{
-      await fetch(WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({name:G.name,email:G.email,score:G.score,accuracy:acc,correctQ:G.correctQ,totalQ:G.totalQ,avgSpeed:G.speedSamples.length?(G.speedSamples.reduce((a,b)=>a+b,0)/G.speedSamples.length).toFixed(1):'',device:G.device})});
-      const lb=await(await fetch(`${WEBHOOK}?action=lb`)).json();
-      if(lb&&lb.lb&&lb.lb.length>0){
-        // Merge in current player if not already in the sheet yet
-        const list=[...lb.lb];
-        const alreadyIn=list.find(p=>p.name===G.name||p.email===G.email);
-        if(!alreadyIn)list.push({name:G.name,score:G.score,me:true});
-        renderLB(list);
-      } else {
-        renderMockLB();
-      }
+      // Build payload
+      const avg=G.speedSamples.length?(G.speedSamples.reduce((a,b)=>a+b,0)/G.speedSamples.length).toFixed(1):'';
+      const payload={
+        name:G.name,email:G.email,
+        score:G.score,accuracy:acc,
+        correctQ:G.correctQ,totalQ:G.totalQ,
+        avgSpeed:avg,device:G.device
+      };
+
+      // Method 1: POST with no-cors (fire and forget — most reliable from GitHub Pages)
+      fetch(WEBHOOK,{
+        method:'POST',
+        mode:'no-cors',
+        headers:{'Content-Type':'text/plain'},
+        body:JSON.stringify(payload)
+      }).catch(()=>{});
+
+      // Method 2: GET fallback — encode data as URL params (backup)
+      const params=new URLSearchParams({
+        action:'save',
+        name:G.name,email:G.email,
+        score:G.score,accuracy:acc,
+        correctQ:G.correctQ,totalQ:G.totalQ,
+        avgSpeed:avg,device:G.device
+      });
+      fetch(`${WEBHOOK}?${params.toString()}`,{mode:'no-cors'}).catch(()=>{});
+
+      // Load leaderboard via GET (always works, has CORS headers)
+      setTimeout(async()=>{
+        try{
+          const lb=await(await fetch(`${WEBHOOK}?action=lb`)).json();
+          if(lb&&lb.lb&&lb.lb.length>0){
+            const list=[...lb.lb];
+            const alreadyIn=list.find(p=>p.email===G.email);
+            if(!alreadyIn)list.push({name:G.name,score:G.score,me:true});
+            renderLB(list);
+          } else {
+            renderMockLB();
+          }
+        }catch{renderMockLB();}
+      },2000); // wait 2s for the save to complete
+
     }catch{renderMockLB();}
   }else renderMockLB();
 }
