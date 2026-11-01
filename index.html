@@ -911,7 +911,7 @@ button,*{user-select:none}
 </div>
 
 <!-- WEBHOOK — paste your Apps Script URL here -->
-<script>const WEBHOOK="https://script.google.com/a/macros/talabat.com/s/AKfycbxAJaic3KqsAmvltKcauk4YkzMh1VSbplxnORYqFLZoS_Xl7a1TMYzRpqxKoVcgY1JA/exec";</script>
+<script>const WEBHOOK="https://script.google.com/a/macros/talabat.com/s/AKfycbzyJrLtLE8Pq2Tgx1qqoNDfd0r5shb4yJk6OhbeXAjTMzx6U-lpEwII5sB6Kq2W7bIq/exec";</script>
 
 <script>
 'use strict';
@@ -1278,7 +1278,7 @@ document.getElementById('btnStart').addEventListener('click',async()=>{
   G.name=nm;G.email=em;
   const btn=document.getElementById('btnStart');
   btn.disabled=true;document.getElementById('btnTxt').textContent='Checking…';
-  if(WEBHOOK){
+  if(WEBHOOK&&WEBHOOK!=='PASTE_YOUR_APPS_SCRIPT_URL_HERE'){
     try{
       const r=await fetch(`${WEBHOOK}?email=${encodeURIComponent(em)}`);
       const d=await r.json();
@@ -1555,69 +1555,68 @@ async function endGame(){
   show('sEnd');
   setTimeout(()=>document.querySelectorAll('.bd-fill').forEach(b=>b.style.width=b.style.getPropertyValue('--w')),200);
   // backend sync
-  if(WEBHOOK){
+  if(WEBHOOK&&WEBHOOK!=='PASTE_YOUR_APPS_SCRIPT_URL_HERE'){
     try{
-      // Build payload
-      const avg=G.speedSamples.length?(G.speedSamples.reduce((a,b)=>a+b,0)/G.speedSamples.length).toFixed(1):'';
-      const payload={
-        name:G.name,email:G.email,
-        score:G.score,accuracy:acc,
-        correctQ:G.correctQ,totalQ:G.totalQ,
-        avgSpeed:avg,device:G.device
-      };
+      const avg=G.speedSamples.length
+        ?(G.speedSamples.reduce((a,b)=>a+b,0)/G.speedSamples.length).toFixed(1):'';
 
-      // Method 1: POST with no-cors (fire and forget — most reliable from GitHub Pages)
-      fetch(WEBHOOK,{
-        method:'POST',
-        mode:'no-cors',
-        headers:{'Content-Type':'text/plain'},
-        body:JSON.stringify(payload)
-      }).catch(()=>{});
-
-      // Method 2: GET fallback — encode data as URL params (backup)
+      // PRIMARY: Save via GET — works on all accounts including org (talabat.com)
       const params=new URLSearchParams({
         action:'save',
-        name:G.name,email:G.email,
-        score:G.score,accuracy:acc,
-        correctQ:G.correctQ,totalQ:G.totalQ,
-        avgSpeed:avg,device:G.device
+        name:G.name,
+        email:G.email,
+        score:G.score,
+        accuracy:acc,
+        correctQ:G.correctQ,
+        totalQ:G.totalQ,
+        avgSpeed:avg,
+        device:G.device
       });
-      fetch(`${WEBHOOK}?${params.toString()}`,{mode:'no-cors'}).catch(()=>{});
+      // Use image trick to bypass CORS completely — 100% reliable
+      const img=new Image();
+      img.src=`${WEBHOOK}?${params.toString()}`;
 
-      // Load leaderboard via GET (always works, has CORS headers)
+      // Also try direct fetch GET (works when CORS is open)
+      fetch(`${WEBHOOK}?${params.toString()}`)
+        .then(r=>r.json())
+        .then(d=>console.log('Save result:',d))
+        .catch(()=>{});
+
+      // BACKUP: POST no-cors
+      fetch(WEBHOOK,{
+        method:'POST',mode:'no-cors',
+        headers:{'Content-Type':'text/plain'},
+        body:JSON.stringify({name:G.name,email:G.email,score:G.score,
+          accuracy:acc,correctQ:G.correctQ,totalQ:G.totalQ,avgSpeed:avg,device:G.device})
+      }).catch(()=>{});
+
+      // Load leaderboard after 3s (give save time to complete)
       setTimeout(async()=>{
         try{
           const lb=await(await fetch(`${WEBHOOK}?action=lb`)).json();
           if(lb&&lb.lb&&lb.lb.length>0){
             const list=[...lb.lb];
-            const alreadyIn=list.find(p=>p.email===G.email);
-            if(!alreadyIn)list.push({name:G.name,score:G.score,me:true});
+            const already=list.find(p=>p.email===G.email);
+            if(!already)list.push({name:G.name,score:G.score,me:true});
             renderLB(list);
-          } else {
-            renderMockLB();
-          }
+          }else renderMockLB();
         }catch{renderMockLB();}
-      },2000); // wait 2s for the save to complete
+      },3000);
 
     }catch{renderMockLB();}
   }else renderMockLB();
 }
 function renderMockLB(){
-  // No mock data — show real player's result only, wait for others via webhook
+  // Show only current player — clean, no technical messages
   const c=document.getElementById('eLB');
   const acc=G.totalQ?Math.round(G.correctQ/G.totalQ*100):0;
-  // Show only the current player's result with a message about the live board
   const row=document.createElement('div');row.className='lb-row me';
-  row.innerHTML=`<div class="lb-rank lb-r1">🏅</div><div class="lb-info"><div class="lb-name">${G.name||'You'}<span class="lb-me-tag">YOU</span></div><div style="font-size:10px;color:#907065;margin-top:2px">Just completed · ${acc}% accuracy</div></div><div class="lb-score">${G.score.toLocaleString()} pts</div>`;
+  row.innerHTML=`<div class="lb-rank lb-r1">🏅</div><div class="lb-info"><div class="lb-name">${G.name||'You'}<span class="lb-me-tag">YOU</span></div><div style="font-size:10px;color:#907065;margin-top:2px">${acc}% accuracy · Just completed</div></div><div class="lb-score">${G.score.toLocaleString()} pts</div>`;
   c.appendChild(row);
-  // Info message
+  // Simple waiting message — no technical details
   const msg=document.createElement('div');
-  msg.style.cssText='text-align:center;padding:16px 12px;font-size:12px;color:#907065;line-height:1.6;';
-  if(WEBHOOK){
-    msg.innerHTML='<div style="font-size:20px;margin-bottom:6px">⏳</div>Connect your Google Sheet to see live rankings from all players.<br>Add your Apps Script URL to the <code style="background:#f3ede9;padding:1px 5px;border-radius:4px;font-size:11px">WEBHOOK</code> variable in the HTML.';
-  } else {
-    msg.innerHTML='<div style="font-size:20px;margin-bottom:6px">🏆</div>Live rankings appear here once other employees complete the game.<br>Rankings update in real-time from your Google Sheet.';
-  }
+  msg.style.cssText='text-align:center;padding:20px 12px;font-size:13px;color:#907065;line-height:1.6;';
+  msg.innerHTML='🏆 Live rankings will appear here as colleagues complete the game.';
   c.appendChild(msg);
 }
 function renderLB(list){
