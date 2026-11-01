@@ -742,6 +742,11 @@ button,*{user-select:none}
       <div style="font-size:13px;color:#907065">You've already conquered Fawzeer Talabat.</div>
       <div class="already-score" id="alreadyPts">0</div>
       <div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#907065">Your Final Score</div>
+      <div id="adminResetWrap" style="display:none;margin-top:8px;padding-top:14px;border-top:1px solid #f3ede9;width:100%;text-align:center">
+        <button onclick="resetGame()" style="background:none;border:1px solid #e4beb1;border-radius:99px;padding:6px 18px;font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:600;color:#907065;cursor:pointer;transition:all .15s" onmouseover="this.style.borderColor='#ff5a00';this.style.color='#ff5a00'" onmouseout="this.style.borderColor='#e4beb1';this.style.color='#907065'">
+          🔄 Reset & Play Again
+        </button>
+      </div>
     </div>
 
     <!-- LP grid -->
@@ -906,7 +911,7 @@ button,*{user-select:none}
 </div>
 
 <!-- WEBHOOK — paste your Apps Script URL here -->
-<script>const WEBHOOK=https://script.google.com/a/macros/talabat.com/s/AKfycbw2VlsX5sZFLrwD4baI5vpoHuyr_NIiAdNuPjHxrPmzGdDFWFdIQLWlJm5dnDZwZjMO/exec";</script>
+<script>const WEBHOOK="";</script>
 
 <script>
 'use strict';
@@ -1251,6 +1256,11 @@ window.addEventListener('DOMContentLoaded',()=>{
       ab.style.display='flex';
       document.getElementById('alreadyHi').textContent=`Welcome back, ${d.name||'Champion'}! 👋`;
       document.getElementById('alreadyPts').textContent=d.score||0;
+      // Show reset button ONLY for admin
+      if(d.email&&d.email.toLowerCase().trim()==='mai.gendy@talabat.com'){
+        const wrap=document.getElementById('adminResetWrap');
+        if(wrap)wrap.style.display='block';
+      }
     }catch{}
   }
 });
@@ -1277,6 +1287,11 @@ document.getElementById('btnStart').addEventListener('click',async()=>{
         const ab=document.getElementById('alreadyBox');ab.style.display='flex';
         document.getElementById('alreadyHi').textContent=`Welcome back, ${d.name||nm}! 👋`;
         document.getElementById('alreadyPts').textContent=d.score||0;
+        // Show reset button ONLY for admin
+        if(em==='mai.gendy@talabat.com'){
+          const wrap=document.getElementById('adminResetWrap');
+          if(wrap)wrap.style.display='block';
+        }
         btn.disabled=false;document.getElementById('btnTxt').textContent='⚡ Enter the Arena';
         return;
       }
@@ -1612,6 +1627,25 @@ function confettiBurst(n){
   };anim();
 }
 window.addEventListener('resize',()=>{const cv=document.getElementById('cnv');if(cv){cv.width=window.innerWidth;cv.height=window.innerHeight;}});
+
+// ── ADMIN RESET ──────────────────────────────────────────────
+function resetGame(){
+  localStorage.removeItem('fawzeer_v7');
+  // Reset state
+  Object.assign(G,{score:0,streak:0,correctQ:0,totalQ:0,ri:0,qi:0,
+    roundScores:[0,0,0,0,0],roundCorrect:[0,0,0,0,0],speedSamples:[],
+    name:'',email:''});
+  // Hide already-played, show form
+  document.getElementById('alreadyBox').style.display='none';
+  document.getElementById('regForm').style.display='block';
+  // Clear form fields
+  document.getElementById('inpName').value='';
+  document.getElementById('inpEmail').value='';
+  // Go back to lobby if not already there
+  show('sLobby');
+  // Scroll to top
+  document.getElementById('sLobby').querySelector('.lobby-body').scrollTop=0;
+}
 </script>
 </body>
 </html>
