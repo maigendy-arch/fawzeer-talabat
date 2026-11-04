@@ -298,14 +298,15 @@ button,*{user-select:none}
 .lp-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
 @media(max-width:400px){.lp-grid{grid-template-columns:1fr 1fr}}
 .lp-card{
-  background:#fff;border-radius:14px;padding:12px;
+  background:#fff;border-radius:14px;padding:14px 12px;
   box-shadow:0 2px 4px rgba(29,27,25,.04);cursor:pointer;
-  transition:transform .15s,box-shadow .15s
+  transition:transform .15s,box-shadow .15s;
+  display:flex;flex-direction:column;align-items:flex-start;gap:4px
 }
-.lp-card:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(255,90,0,.12)}
-.lp-emoji{font-size:22px;margin-bottom:6px}
-.lp-name{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:#1d1b19;line-height:1.2;margin-bottom:3px}
-.lp-cat{font-size:10px;font-weight:600;color:#907065;letter-spacing:.04em;text-transform:uppercase}
+.lp-card:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(255,90,0,.15)}
+.lp-icon-wrap{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:6px;flex-shrink:0}
+.lp-name{font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:#1d1b19;line-height:1.2}
+.lp-tagline{font-size:10px;font-weight:600;color:#ff5a00;line-height:1.3;font-style:italic}
 
 /* ══════════════════════════════════════════════════════════
    SCREEN 2 — ROUND INTRO
@@ -726,6 +727,27 @@ button,*{user-select:none}
         <div class="reg-err" id="errEmail">Please enter a valid work email</div>
       </div>
 
+      <div class="reg-field">
+        <div class="reg-label">
+          <span style="font-size:15px">🌍</span> Market
+        </div>
+        <div class="reg-input-wrap">
+          <select class="reg-input" id="inpMarket" style="padding-left:14px;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23907065%22 stroke-width=%222%22><polyline points=%226,9 12,15 18,9%22/></svg>');background-repeat:no-repeat;background-position:right 14px center;background-size:18px">
+            <option value="" disabled selected>Select your market…</option>
+            <option value="Egypt">🇪🇬 Egypt</option>
+            <option value="UAE">🇦🇪 UAE</option>
+            <option value="Kuwait">🇰🇼 Kuwait</option>
+            <option value="Saudi Arabia">🇸🇦 Saudi Arabia</option>
+            <option value="Qatar">🇶🇦 Qatar</option>
+            <option value="Bahrain">🇧🇭 Bahrain</option>
+            <option value="Oman">🇴🇲 Oman</option>
+            <option value="Jordan">🇯🇴 Jordan</option>
+            <option value="Iraq">🇮🇶 Iraq</option>
+          </select>
+        </div>
+        <div class="reg-err" id="errMarket">Please select your market</div>
+      </div>
+
       <div class="reg-footer">
         <div class="reg-disclaimer">🔒 One attempt per email · Scores locked on submission</div>
         <button class="btn-cta" id="btnStart" style="width:auto;padding:0 24px">
@@ -753,12 +775,93 @@ button,*{user-select:none}
     <div>
       <div class="lp-heading">The 6 Leadership Principles</div>
       <div class="lp-grid">
-        <div class="lp-card"><div class="lp-emoji">⚡</div><div class="lp-name">Deliver Value Fast</div><div class="lp-cat">Speed · Logistics</div></div>
-        <div class="lp-card"><div class="lp-emoji">📊</div><div class="lp-name">Dive Deep</div><div class="lp-cat">Data · Frontline</div></div>
-        <div class="lp-card"><div class="lp-emoji">🏆</div><div class="lp-name">Raise the Bar</div><div class="lp-cat">Quality · Standards</div></div>
-        <div class="lp-card"><div class="lp-emoji">💪</div><div class="lp-name">Own It</div><div class="lp-cat">Ownership · Action</div></div>
-        <div class="lp-card"><div class="lp-emoji">🙏</div><div class="lp-name">Stay Humble</div><div class="lp-cat">Culture · Team</div></div>
-        <div class="lp-card"><div class="lp-emoji">✨</div><div class="lp-name">Bring Good Vibes</div><div class="lp-cat">Energy · Community</div></div>
+
+        <!-- Deliver Value Fast -->
+        <div class="lp-card">
+          <div class="lp-icon-wrap" style="background:#fff0e8">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="36" height="36">
+              <!-- Running bird with "t" — speed icon -->
+              <circle cx="24" cy="24" r="20" fill="#fff0e8"/>
+              <!-- Lightning bolt -->
+              <path d="M28 8L18 24h8l-4 16 14-20h-8L28 8z" fill="#ff5a00" stroke="#ff5a00" stroke-width="1" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="lp-name">Deliver Value Fast</div>
+          <div class="lp-tagline">Speed as a superpower.</div>
+        </div>
+
+        <!-- Dive Deep -->
+        <div class="lp-card">
+          <div class="lp-icon-wrap" style="background:#fff0e8">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="36" height="36">
+              <circle cx="24" cy="24" r="20" fill="#fff0e8"/>
+              <!-- Magnifying glass -->
+              <circle cx="21" cy="21" r="9" stroke="#ff5a00" stroke-width="2.5" fill="none"/>
+              <path d="M28 28L36 36" stroke="#ff5a00" stroke-width="2.5" stroke-linecap="round"/>
+              <!-- flag inside glass -->
+              <path d="M18 17v8M18 17l5 2.5-5 2.5" stroke="#ff5a00" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="lp-name">Dive Deep</div>
+          <div class="lp-tagline">Go to the Frontline.</div>
+        </div>
+
+        <!-- Raise the Bar -->
+        <div class="lp-card">
+          <div class="lp-icon-wrap" style="background:#fff0e8">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="36" height="36">
+              <circle cx="24" cy="24" r="20" fill="#fff0e8"/>
+              <!-- Mountain with flag -->
+              <path d="M10 36L24 14l14 22H10z" stroke="#ff5a00" stroke-width="2.2" fill="none" stroke-linejoin="round"/>
+              <path d="M24 14v-5M24 9l5 3" stroke="#ff5a00" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="lp-name">Raise the Bar</div>
+          <div class="lp-tagline">Start with impossible.</div>
+        </div>
+
+        <!-- Own It -->
+        <div class="lp-card">
+          <div class="lp-icon-wrap" style="background:#fff0e8">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="36" height="36">
+              <circle cx="24" cy="24" r="20" fill="#fff0e8"/>
+              <!-- Big checkmark -->
+              <path d="M12 25l8 8 16-16" stroke="#ff5a00" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="lp-name">Own It</div>
+          <div class="lp-tagline">Turn every stone.</div>
+        </div>
+
+        <!-- Stay Humble -->
+        <div class="lp-card">
+          <div class="lp-icon-wrap" style="background:#fff0e8">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="36" height="36">
+              <circle cx="24" cy="24" r="20" fill="#fff0e8"/>
+              <!-- Hand holding heart -->
+              <path d="M14 28c0 0 2-4 10-4s10 4 10 4v4c0 1-1 2-2 2H16c-1 0-2-1-2-2v-4z" stroke="#ff5a00" stroke-width="2" fill="none"/>
+              <!-- Heart -->
+              <path d="M24 22c0 0-5-4-5-7a3 3 0 0 1 5-2 3 3 0 0 1 5 2c0 3-5 7-5 7z" fill="#ff5a00"/>
+            </svg>
+          </div>
+          <div class="lp-name">Stay Humble</div>
+          <div class="lp-tagline">Flip the pyramid.</div>
+        </div>
+
+        <!-- Bring Good Vibes -->
+        <div class="lp-card">
+          <div class="lp-icon-wrap" style="background:#fff0e8">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="36" height="36">
+              <circle cx="24" cy="24" r="20" fill="#fff0e8"/>
+              <!-- Two hands high-five -->
+              <path d="M16 30l-4-8 2-1 3 5V18h2v10l2-8h2l-1 8 2-6h2l-1 8c3 0 3 2 3 4H16z" stroke="#ff5a00" stroke-width="1.8" fill="none" stroke-linejoin="round"/>
+              <path d="M32 30l4-8-2-1-3 5V18h-2v10" stroke="#ff5a00" stroke-width="1.8" fill="none" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="lp-name">Bring Good Vibes</div>
+          <div class="lp-tagline">Be REAL. Be KIND.</div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -989,7 +1092,7 @@ const TOTAL_Q=ROUNDS.reduce((s,r)=>s+r.questions.length,0);
 
 // ── STATE ──────────────────────────────────────────────────────
 const G={
-  name:'',email:'',device:'',
+  name:'',email:'',market:'',device:'',
   score:0,streak:0,correctQ:0,totalQ:0,
   roundScores:[0,0,0,0,0],roundCorrect:[0,0,0,0,0],
   ri:0,qi:0,timerID:null,hangRevID:null,cdID:null,
@@ -1269,13 +1372,16 @@ window.addEventListener('DOMContentLoaded',()=>{
 document.getElementById('btnStart').addEventListener('click',async()=>{
   const nm=document.getElementById('inpName').value.trim();
   const em=document.getElementById('inpEmail').value.trim().toLowerCase();
+  const mk=document.getElementById('inpMarket').value;
   let ok=true;
   if(nm.length<2){document.getElementById('errName').style.display='block';ok=false;}
   else document.getElementById('errName').style.display='none';
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){document.getElementById('errEmail').style.display='block';ok=false;}
   else document.getElementById('errEmail').style.display='none';
+  if(!mk){document.getElementById('errMarket').style.display='block';ok=false;}
+  else document.getElementById('errMarket').style.display='none';
   if(!ok)return;
-  G.name=nm;G.email=em;
+  G.name=nm;G.email=em;G.market=mk;
   const btn=document.getElementById('btnStart');
   btn.disabled=true;document.getElementById('btnTxt').textContent='Checking…';
   if(WEBHOOK&&WEBHOOK!=='PASTE_YOUR_APPS_SCRIPT_URL_HERE'){
@@ -1565,6 +1671,7 @@ async function endGame(){
         action:'save',
         name:G.name,
         email:G.email,
+        market:G.market,
         score:G.score,
         accuracy:acc,
         correctQ:G.correctQ,
@@ -1586,7 +1693,7 @@ async function endGame(){
       fetch(WEBHOOK,{
         method:'POST',mode:'no-cors',
         headers:{'Content-Type':'text/plain'},
-        body:JSON.stringify({name:G.name,email:G.email,score:G.score,
+        body:JSON.stringify({name:G.name,email:G.email,market:G.market,score:G.score,
           accuracy:acc,correctQ:G.correctQ,totalQ:G.totalQ,avgSpeed:avg,device:G.device})
       }).catch(()=>{});
 
@@ -1670,6 +1777,7 @@ function resetGame(){
   // Clear form fields
   document.getElementById('inpName').value='';
   document.getElementById('inpEmail').value='';
+  document.getElementById('inpMarket').value='';
   // Go back to lobby if not already there
   show('sLobby');
   // Scroll to top
