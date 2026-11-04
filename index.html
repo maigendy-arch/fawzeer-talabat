@@ -1014,7 +1014,7 @@ button,*{user-select:none}
 </div>
 
 <!-- WEBHOOK — paste your Apps Script URL here -->
-<script>const WEBHOOK="https://script.google.com/a/macros/talabat.com/s/AKfycbzCS_Zuj0RwxOM1_2dDy2GFHSB5zw3QxQXJld9uCLo3trY9DgDHu5AP5jQrW57WAv9c/exec";</script>
+<script>const WEBHOOK="https://script.google.com/a/macros/talabat.com/s/AKfycbyi_95Gcqb6do_j08Uso5ws5vbmw7GhApAFt6j9IaV5YvRuuNCC_-SVuUHYRFnC5zJn/exec";</script>
 
 <script>
 'use strict';
@@ -1662,55 +1662,69 @@ async function endGame(){
   setTimeout(()=>document.querySelectorAll('.bd-fill').forEach(b=>b.style.width=b.style.getPropertyValue('--w')),200);
   // backend sync
   if(WEBHOOK&&WEBHOOK!=='PASTE_YOUR_APPS_SCRIPT_URL_HERE'){
-    try{
-      const avg=G.speedSamples.length
-        ?(G.speedSamples.reduce((a,b)=>a+b,0)/G.speedSamples.length).toFixed(1):'';
+    const avg=G.speedSamples.length
+      ?(G.speedSamples.reduce((a,b)=>a+b,0)/G.speedSamples.length).toFixed(1):'';
 
-      // PRIMARY: Save via GET — works on all accounts including org (talabat.com)
-      const params=new URLSearchParams({
-        action:'save',
-        name:G.name,
-        email:G.email,
-        market:G.market,
-        score:G.score,
-        accuracy:acc,
-        correctQ:G.correctQ,
-        totalQ:G.totalQ,
-        avgSpeed:avg,
-        device:G.device
+    // ── SAVE: image pixel trick — bypasses CORS on org accounts ──
+    const saveParams=new URLSearchParams({
+      action:'save',name:G.name,email:G.email,market:G.market,
+      score:G.score,accuracy:acc,correctQ:G.correctQ,
+      totalQ:G.totalQ,avgSpeed:avg,device:G.device
+    });
+    new Image().src=`${WEBHOOK}?${saveParams.toString()}`;
+    // Also try fetch save
+    fetch(`${WEBHOOK}?${saveParams.toString()}`).catch(()=>{});
+    // POST backup
+    fetch(WEBHOOK,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},
+      body:JSON.stringify({name:G.name,email:G.email,market:G.market,score:G.score,
+        accuracy:acc,correctQ:G.correctQ,totalQ:G.totalQ,avgSpeed:avg,device:G.device})
+    }).catch(()=>{});
+
+    // ── LEADERBOARD: use JSONP to bypass CORS completely ──────────
+    function loadLeaderboard(){
+      return new Promise((resolve)=>{
+        // Method 1: JSONP via script tag
+        const cb='_lb'+Date.now();
+        const s=document.createElement('script');
+        window[cb]=(data)=>{
+          delete window[cb];
+          s.remove();
+          resolve(data);
+        };
+        s.src=`${WEBHOOK}?action=lb&callback=${cb}`;
+        s.onerror=()=>{ delete window[cb]; s.remove(); resolve(null); };
+        setTimeout(()=>{ delete window[cb]; s.remove(); resolve(null); },8000);
+        document.head.appendChild(s);
       });
-      // Use image trick to bypass CORS completely — 100% reliable
-      const img=new Image();
-      img.src=`${WEBHOOK}?${params.toString()}`;
+    }
 
-      // Also try direct fetch GET (works when CORS is open)
-      fetch(`${WEBHOOK}?${params.toString()}`)
-        .then(r=>r.json())
-        .then(d=>console.log('Save result:',d))
-        .catch(()=>{});
+    // Method 2: regular fetch (works if CORS is open)
+    async function loadLBfetch(){
+      try{
+        const r=await fetch(`${WEBHOOK}?action=lb`);
+        return await r.json();
+      }catch{return null;}
+    }
 
-      // BACKUP: POST no-cors
-      fetch(WEBHOOK,{
-        method:'POST',mode:'no-cors',
-        headers:{'Content-Type':'text/plain'},
-        body:JSON.stringify({name:G.name,email:G.email,market:G.market,score:G.score,
-          accuracy:acc,correctQ:G.correctQ,totalQ:G.totalQ,avgSpeed:avg,device:G.device})
-      }).catch(()=>{});
+    // Try both methods, use whichever responds first
+    setTimeout(async()=>{
+      let data=null;
+      // Race fetch vs JSONP
+      data=await Promise.race([
+        loadLBfetch(),
+        loadLeaderboard()
+      ]);
+      if(data&&data.lb&&data.lb.length>0){
+        const list=[...data.lb];
+        const already=list.find(p=>p.email===G.email);
+        if(!already)list.push({name:G.name,score:G.score,me:true});
+        renderLB(list);
+      }else{
+        // Last resort: show at least current player
+        renderMockLB();
+      }
+    },3500);
 
-      // Load leaderboard after 3s (give save time to complete)
-      setTimeout(async()=>{
-        try{
-          const lb=await(await fetch(`${WEBHOOK}?action=lb`)).json();
-          if(lb&&lb.lb&&lb.lb.length>0){
-            const list=[...lb.lb];
-            const already=list.find(p=>p.email===G.email);
-            if(!already)list.push({name:G.name,score:G.score,me:true});
-            renderLB(list);
-          }else renderMockLB();
-        }catch{renderMockLB();}
-      },3000);
-
-    }catch{renderMockLB();}
   }else renderMockLB();
 }
 function renderMockLB(){
