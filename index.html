@@ -451,7 +451,7 @@ button,*{user-select:none}
   </div>
 </div>
 
-<script>const WEBHOOK="https://script.google.com/a/macros/talabat.com/s/AKfycbyXqL5cmJ-6vzsogJt2S9VUmbBnNXGbdzZSn7MybdVSs69lLdcxmug8b_gbFJwfC8Gg/exec";</script>
+<script>const WEBHOOK="https://script.google.com/a/macros/talabat.com/s/AKfycbweA23rAmpBm83MmYykj70qn0yNwdiZW5uoZjnC0OtwhgUg89CWhFZNeabcwd1dJVIF/exec";</script>
 <script>
 'use strict';
 function dec(s){try{return atob(s);}catch{return s;}}
@@ -564,10 +564,10 @@ function playMusicBar(){
     if(isC&&i%2===0){try{const oa=c.createOscillator(),ga=c.createGain();oa.type='sine';oa.frequency.value=chord[i%3]*2;ga.gain.setValueAtTime(0,b+BEAT*.5);ga.gain.linearRampToValueAtTime(.014,b+BEAT*.55);ga.gain.linearRampToValueAtTime(0,b+BEAT*.88);oa.connect(ga);ga.connect(c.destination);oa.start(b+BEAT*.5);oa.stop(b+BEAT*.92);}catch{}}
     if(i===0||(i===8&&isC)){try{const ok=c.createOscillator(),gk=c.createGain();ok.type='sine';ok.frequency.setValueAtTime(120,b);ok.frequency.exponentialRampToValueAtTime(40,b+.12);gk.gain.setValueAtTime(isC?.045:.03,b);gk.gain.exponentialRampToValueAtTime(.0001,b+.14);ok.connect(gk);gk.connect(c.destination);ok.start(b);ok.stop(b+.15);}catch{}}
     if(i===4||i===12){try{const on=c.createOscillator(),gn=c.createGain();on.type='square';on.frequency.value=isC?180:880;gn.gain.setValueAtTime(isC?.025:.008,b);gn.gain.exponentialRampToValueAtTime(.0001,b+(isC?.09:.04));on.connect(gn);gn.connect(c.destination);on.start(b);on.stop(b+(isC?.1:.05));}catch{}}
+  }
   _songBar++;G._loopT+=STEPS*BEAT;
   const ms=Math.max(10,(G._loopT-c.currentTime-.18)*1000);
   G.synthLoop=setTimeout(()=>{if(G._loopActive&&G.audioOn)playMusicBar();},ms);
-}
 function startMusic(){if(!G.audioOn||G._loopActive)return;const c=getAC();if(!c)return;G._loopActive=true;_songBar=0;G._loopT=c.currentTime+.1;playMusicBar();}
 function stopMusic(){G._loopActive=false;clearTimeout(G.synthLoop);}
 function toggleAudio(){G.audioOn=!G.audioOn;document.querySelectorAll('#audioBtnL,#audioBtnG').forEach(b=>b.textContent=G.audioOn?'🔊':'🔇');if(!G.audioOn)stopMusic();else startMusic();}
