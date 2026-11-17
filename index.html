@@ -559,12 +559,11 @@ function playMusicBar(){
   for(let i=0;i<STEPS;i++){
     const b=t+i*BEAT;
     try{const ob=c.createOscillator(),gb=c.createGain();ob.type='triangle';ob.frequency.value=chord[0]/2;gb.gain.setValueAtTime(0,b);gb.gain.linearRampToValueAtTime(vol,b+.022);gb.gain.linearRampToValueAtTime(0,b+BEAT*.85);ob.connect(gb);gb.connect(c.destination);ob.start(b);ob.stop(b+BEAT*.9);}catch{}
-    if(i===0||i===8){chord.forEach((f,ci)=>{try{const oc=c.createOscillator(),gc=c.createGain();oc.type='sine';oc.frequency.value=f;gc.gain.setValueAtTime(0,b+ci*.015);gc.gain.linearRampToValueAtTime(vol*.6,b+ci*.015+.04);gc.gain.linearRampToValueAtTime(vol*.3,b+BEAT*3.5);gc.gain.linearRampToValueAtTime(0,b+BEAT*3.9);oc.connect(gc);gc.connect(c.destination);oc.start(b+ci*.015);oc.stop(b+BEAT*4);}catch{}}));}
+    if(i===0||i===8){chord.forEach((f,ci)=>{try{const oc=c.createOscillator(),gc=c.createGain();oc.type='sine';oc.frequency.value=f;gc.gain.setValueAtTime(0,b+ci*.015);gc.gain.linearRampToValueAtTime(vol*.6,b+ci*.015+.04);gc.gain.linearRampToValueAtTime(vol*.3,b+BEAT*3.5);gc.gain.linearRampToValueAtTime(0,b+BEAT*3.9);oc.connect(gc);gc.connect(c.destination);oc.start(b+ci*.015);oc.stop(b+BEAT*4);}catch{}}});}
     try{const om=c.createOscillator(),gm=c.createGain();om.type='triangle';om.frequency.value=noteFreq(chord[0],mel[i]+(isC?12:0));gm.gain.setValueAtTime(0,b+BEAT*.06);gm.gain.linearRampToValueAtTime(isC?.036:.028,b+BEAT*.11);gm.gain.linearRampToValueAtTime(0,b+BEAT*.78);om.connect(gm);gm.connect(c.destination);om.start(b+BEAT*.06);om.stop(b+BEAT*.82);}catch{}
     if(isC&&i%2===0){try{const oa=c.createOscillator(),ga=c.createGain();oa.type='sine';oa.frequency.value=chord[i%3]*2;ga.gain.setValueAtTime(0,b+BEAT*.5);ga.gain.linearRampToValueAtTime(.014,b+BEAT*.55);ga.gain.linearRampToValueAtTime(0,b+BEAT*.88);oa.connect(ga);ga.connect(c.destination);oa.start(b+BEAT*.5);oa.stop(b+BEAT*.92);}catch{}}
     if(i===0||(i===8&&isC)){try{const ok=c.createOscillator(),gk=c.createGain();ok.type='sine';ok.frequency.setValueAtTime(120,b);ok.frequency.exponentialRampToValueAtTime(40,b+.12);gk.gain.setValueAtTime(isC?.045:.03,b);gk.gain.exponentialRampToValueAtTime(.0001,b+.14);ok.connect(gk);gk.connect(c.destination);ok.start(b);ok.stop(b+.15);}catch{}}
     if(i===4||i===12){try{const on=c.createOscillator(),gn=c.createGain();on.type='square';on.frequency.value=isC?180:880;gn.gain.setValueAtTime(isC?.025:.008,b);gn.gain.exponentialRampToValueAtTime(.0001,b+(isC?.09:.04));on.connect(gn);gn.connect(c.destination);on.start(b);on.stop(b+(isC?.1:.05));}catch{}}
-  }
   _songBar++;G._loopT+=STEPS*BEAT;
   const ms=Math.max(10,(G._loopT-c.currentTime-.18)*1000);
   G.synthLoop=setTimeout(()=>{if(G._loopActive&&G.audioOn)playMusicBar();},ms);
@@ -610,33 +609,6 @@ document.getElementById('btnStart').addEventListener('click',async()=>{
   if(!mk){document.getElementById('errMarket').style.display='block';ok=false;}else document.getElementById('errMarket').style.display='none';
   if(!ok)return;
   G.name=nm;G.email=em;G.market=mk;
-  const btn=document.getElementById('btnStart');
-  btn.disabled=true;
-  document.getElementById('btnTxt').textContent='Checking…';
-  // Check email with 3s timeout — if fails just start game
-  if(WEBHOOK){
-    try{
-      const controller=new AbortController();
-      const timeout=setTimeout(()=>controller.abort(),3000);
-      const r=await fetch(WEBHOOK+'?email='+encodeURIComponent(em),{signal:controller.signal});
-      clearTimeout(timeout);
-      const d=await r.json();
-      if(d&&d.exists){
-        document.getElementById('regForm').style.display='none';
-        const ab=document.getElementById('alreadyBox');ab.style.display='flex';
-        document.getElementById('alreadyHi').textContent='Welcome back, '+(d.name||nm)+'! 👋';
-        document.getElementById('alreadyPts').textContent=d.score||0;
-        if(em==='mai.gendy@talabat.com'){const w=document.getElementById('adminResetWrap');if(w)w.style.display='block';}
-        btn.disabled=false;document.getElementById('btnTxt').textContent='⚡ Enter the Arena';
-        return;
-      }
-    }catch(err){
-      // Timeout or network error — just continue and start game
-      console.log('Email check skipped:',err.message);
-    }
-  }
-  btn.disabled=false;
-  document.getElementById('btnTxt').textContent='⚡ Enter the Arena';
   Object.assign(G,{score:0,streak:0,correctQ:0,totalQ:0,ri:0,qi:0,roundScores:[0,0,0,0,0],roundCorrect:[0,0,0,0,0],speedSamples:[]});
   showIntro(0);
 });
