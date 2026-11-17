@@ -1014,11 +1014,13 @@ button,*{user-select:none}
 </div>
 
 <!-- WEBHOOK — paste your Apps Script URL here -->
-<script>const WEBHOOK="https://script.google.com/a/macros/talabat.com/s/AKfycbw5jA25J_pcHqReQDf9JHPZBAj1tXELN2R4wxvn3C-3tv4jLnQxLilQa2FsC49qhw3v/exec";</script>
+<script>const WEBHOOK="https://script.google.com/a/macros/talabat.com/s/AKfycbzyJrLtLE8Pq2Tgx1qqoNDfd0r5shb4yJk6OhbeXAjTMzx6U-lpEwII5sB6Kq2W7bIq/exec";</script>
 
 <script>
 'use strict';
-// ═════════════════════════════════════════════════════════
+// ── Answer decoder (obfuscation) ─────────────────────────────
+function dec(s){try{return atob(s);}catch{return s;}}
+// ═════════════════════════════════════════════════════════════
 // FAWZEER TALABAT — Complete Game Engine
 // ═════════════════════════════════════════════════════════
 
@@ -1027,67 +1029,67 @@ const ROUNDS=[
  tip:'"Do stuff, don\'t talk about stuff. Action always beats the deck."',
  specs:["10 Questions","20 Seconds","4 Choices","Speed Bonus"],
  questions:[
-  {dept:"Product & Tech",q:"A team holds 3-week review meetings before shipping anything. Which LP are they violating?",opts:["Deliver Value Fast","Raise the Bar","Own It","Bring Good Vibes"]},
-  {dept:"Operations",q:"A manager visits rider hubs in person, rides alongside them, and reviews every dispatch log before making changes. Which LP?",opts:["Dive Deep","Stay Humble","Own It","Raise the Bar"]},
-  {dept:"Partner Care",q:"A platform bug breaks a restaurant's menu at peak time. One person stays on the call until it's fully fixed — without being asked. Which LP?",opts:["Bring Good Vibes","Own It","Deliver Value Fast","Dive Deep"]},
-  {dept:"People & Culture",q:"A director genuinely listens to tough feedback from a junior and completely changes their approach. Which LP?",opts:["Stay Humble","Raise the Bar","Own It","Bring Good Vibes"]},
-  {dept:"Commercial",q:"A team hits 100% target. Instead of celebrating, they benchmark against world-class standards and raise next quarter's bar. Which LP?",opts:["Own It","Deliver Value Fast","Raise the Bar","Dive Deep"]},
-  {dept:"People Experience",q:"A manager only gives feedback during annual reviews instead of in the moment. Which LP are they violating?",opts:["Stay Humble","Raise the Bar","Deliver Value Fast","Bring Good Vibes"]},
-  {dept:"Culture & Comms",q:"Two colleagues agree in a meeting but complain about each other privately afterwards. Which LP does this violate?",opts:["Own It","Stay Humble","Bring Good Vibes","Dive Deep"]},
-  {dept:"Operations",q:"A squad ships a working feature in 3 days to solve a rider pain point instead of waiting 4 months for perfection. Which LP?",opts:["Raise the Bar","Dive Deep","Own It","Deliver Value Fast"]},
-  {dept:"Leadership",q:"A senior leader adopts a junior analyst's solution because the data is stronger — without ego. Which LP?",opts:["Bring Good Vibes","Own It","Stay Humble","Dive Deep"]},
-  {dept:"Growth & Product",q:"A PM makes a key decision with 70% information instead of waiting for certainty. Which LP?",opts:["Raise the Bar","Dive Deep","Own It","Deliver Value Fast"]}
+  {dept:"Product & Tech",q:"A team holds 3-week review meetings before shipping anything. Which LP are they violating?",opts:["Deliver Value Fast","Raise the Bar","Own It","Bring Good Vibes"],a:"RGVsaXZlciBWYWx1ZSBGYXN0",lp:"RGVsaXZlciBWYWx1ZSBGYXN0",fb:"SW5kZXggb24gZGVsaXZlcnkg4oCUIGRvIHN0dWZmLCBkb24ndCB0YWxrIGFib3V0IHN0dWZmLiBBY3Rpb24gYmVhdHMgdGhlIGRlY2su"},
+  {dept:"Operations",q:"A manager visits rider hubs in person, rides alongside them, and reviews every dispatch log before making changes. Which LP?",opts:["Dive Deep","Stay Humble","Own It","Raise the Bar"],a:"RGl2ZSBEZWVw",lp:"RGl2ZSBEZWVw",fb:"TWFzdGVyIHRoZSB3b3JrLiBUcnV0aCBsaXZlcyBvbiB0aGUgZnJvbnRsaW5lIOKAlCBub3QgaW4gZGFzaGJvYXJkcy4="},
+  {dept:"Partner Care",q:"A platform bug breaks a restaurant menu at peak time. One person stays on the call until it's fully fixed — without being asked. Which LP?",opts:["Bring Good Vibes","Own It","Deliver Value Fast","Dive Deep"],a:"T3duIEl0",lp:"T3duIEl0",fb:"U2VlIGl0IHRocm91Z2guIEVuZCB0byBlbmQuIE5vIGV4Y3VzZXMuICdDb25zaWRlciBpdCBkb25lISc="},
+  {dept:"People & Culture",q:"A director genuinely listens to tough feedback from a junior and completely changes their approach. Which LP?",opts:["Stay Humble","Raise the Bar","Own It","Bring Good Vibes"],a:"U3RheSBIdW1ibGU=",lp:"U3RheSBIdW1ibGU=",fb:"VGhlIGJlc3QgaWRlYSB3aW5zIOKAlCBub3QgdGhlIGJpZ2dlc3QgdGl0bGUuIFN0YXkgb3BlbiB0byBiZWluZyB3cm9uZy4="},
+  {dept:"Commercial",q:"A team hits 100% target. Instead of celebrating, they benchmark against world-class standards and raise next quarter's bar. Which LP?",opts:["Own It","Deliver Value Fast","Raise the Bar","Dive Deep"],a:"UmFpc2UgdGhlIEJhcg==",lp:"UmFpc2UgdGhlIEJhcg==",fb:"U3RhcnQgd2l0aCBpbXBvc3NpYmxlLiBEbyBub3Qgc2V0dGxlLiBDaGFsbGVuZ2UgdGhlIGRlZmF1bHQgZXZlcnkgZGF5Lg=="},
+  {dept:"People Experience",q:"A manager only gives feedback during annual reviews instead of in the moment. Which LP are they violating?",opts:["Stay Humble","Raise the Bar","Deliver Value Fast","Bring Good Vibes"],a:"UmFpc2UgdGhlIEJhcg==",lp:"UmFpc2UgdGhlIEJhcg==",fb:"RmVlZGJhY2sgdW5sb2NrcyBvdXIgYm9sZCBtb3Zlcy4gU2hhcmUgaXQgaW4gdGhlIG1vbWVudCDigJQgbm90IG9uY2UgYSB5ZWFyLg=="},
+  {dept:"Culture & Comms",q:"Two colleagues agree in a meeting but complain about each other privately afterwards. Which LP does this violate?",opts:["Own It","Stay Humble","Bring Good Vibes","Dive Deep"],a:"QnJpbmcgR29vZCBWaWJlcw==",lp:"QnJpbmcgR29vZCBWaWJlcw==",fb:"QmUgUkVBTC4gQmUgS0lORC4gSGlkZGVuIGFnZW5kYXMgcG9pc29uIHRlYW0gdHJ1c3Qu"},
+  {dept:"Operations",q:"A squad ships a working feature in 3 days to solve a rider pain point instead of waiting 4 months for perfection. Which LP?",opts:["Raise the Bar","Dive Deep","Own It","Deliver Value Fast"],a:"RGVsaXZlciBWYWx1ZSBGYXN0",lp:"RGVsaXZlciBWYWx1ZSBGYXN0",fb:"TW92ZSBmYXN0LiBTaGlwIHNtYWxsLiBMZWFybi4gR28gYWdhaW4uIFNwZWVkIGlzIHRoZSBzdXBlcnBvd2VyLg=="},
+  {dept:"Leadership",q:"A senior leader adopts a junior analyst's solution because the data is stronger — without ego. Which LP?",opts:["Bring Good Vibes","Own It","Stay Humble","Dive Deep"],a:"U3RheSBIdW1ibGU=",lp:"U3RheSBIdW1ibGU=",fb:"RmxpcCB0aGUgcHlyYW1pZCDigJQgdGhlIGJlc3QgaWRlYSB3aW5zLCBub3QgdGhlIGJpZ2dlc3QgdGl0bGUu"},
+  {dept:"Growth & Product",q:"A PM makes a key decision with 70% information instead of waiting for certainty. Which LP?",opts:["Raise the Bar","Dive Deep","Own It","Deliver Value Fast"],a:"RGVsaXZlciBWYWx1ZSBGYXN0",lp:"RGVsaXZlciBWYWx1ZSBGYXN0",fb:"UHJpb3JpdGl6ZSBzcGVlZCBvdmVyIGNlcnRhaW50eS4gNzAlIGlzIGVub3VnaCDigJQgY291cnNlLWNvcnJlY3QgZmFzdC4="}
  ]},
 {id:2,num:"ROUND 2 OF 5",name:"ACT IT OUT",type:"mc6",time:25,
  tip:'"Look in the mirror first. The best idea wins — not the biggest title."',
  specs:["6 Scenarios","25 Seconds","Identify the LP"],
  questions:[
-  {dept:"Logistics & Fleet",q:"During a flash flood, an ops manager visits hubs in person, inspects rider gear on the ground, re-routes batches manually, and audits every dispatch log line-by-line.",opts:["Deliver Value Fast","Bring Good Vibes","Raise the Bar","Dive Deep","Own It","Stay Humble"]},
-  {dept:"Partner Care",q:"A merchant's integration breaks 30 minutes before Iftar. One person stays on call, coordinates engineers, updates 45 items manually, and updates the partner every 10 minutes.",opts:["Deliver Value Fast","Bring Good Vibes","Raise the Bar","Dive Deep","Own It","Stay Humble"]},
-  {dept:"Engineering",q:"Instead of a 4-month engine, a squad ships a 3-day MVP to test real merchant behavior first.",opts:["Deliver Value Fast","Bring Good Vibes","Raise the Bar","Dive Deep","Own It","Stay Humble"]},
-  {dept:"People & Culture",q:"Tensions flare between Sales and Logistics. One person steps in, kills finger-pointing, and refocuses both teams on the customer.",opts:["Deliver Value Fast","Bring Good Vibes","Raise the Bar","Dive Deep","Own It","Stay Humble"]},
-  {dept:"Commercial & Growth",q:"A target was hit at 105%. Rather than celebrating, the lead does a post-mortem and raises next quarter's quality and retention benchmarks.",opts:["Deliver Value Fast","Bring Good Vibes","Raise the Bar","Dive Deep","Own It","Stay Humble"]},
-  {dept:"Executive",q:"A VP admits their forecasting model was wrong in an exec meeting and immediately adopts a junior data scientist's stronger framework.",opts:["Deliver Value Fast","Bring Good Vibes","Raise the Bar","Dive Deep","Own It","Stay Humble"]}
+  {dept:"Logistics & Fleet",q:"During a flash flood, an ops manager visits hubs in person, inspects rider gear on the ground, re-routes batches manually, and audits every dispatch log line-by-line.",opts:["Deliver Value Fast","Bring Good Vibes","Raise the Bar","Dive Deep","Own It","Stay Humble"],a:"RGl2ZSBEZWVw",lp:"RGl2ZSBEZWVw",fb:"RnJvbnRsaW5lIGltbWVyc2lvbiBhbmQgcmVhbCBjb25kaXRpb25zIOKAlCBEaXZlIERlZXAgYXQgaXRzIGZpbmVzdC4="},
+  {dept:"Partner Care",q:"A merchant's integration breaks 30 minutes before Iftar. One person stays on call, coordinates engineers, updates 45 items manually, and updates the partner every 10 minutes.",opts:["Deliver Value Fast","Bring Good Vibes","Raise the Bar","Dive Deep","Own It","Stay Humble"],a:"T3duIEl0",lp:"T3duIEl0",fb:"RW5kLXRvLWVuZCBvd25lcnNoaXAgd2l0aG91dCBleGN1c2VzIOKAlCB0aGF0IGlzIE93biBJdC4="},
+  {dept:"Engineering",q:"Instead of a 4-month engine, a squad ships a 3-day MVP to test real merchant behavior first.",opts:["Deliver Value Fast","Bring Good Vibes","Raise the Bar","Dive Deep","Own It","Stay Humble"],a:"RGVsaXZlciBWYWx1ZSBGYXN0",lp:"RGVsaXZlciBWYWx1ZSBGYXN0",fb:"U2hpcCBzbWFsbCwgdGVzdCByZWFsIHZhbHVlLCBpdGVyYXRlIHJhcGlkbHkuIEFjdGlvbiBiZWF0cyB0aGUgZGVjay4="},
+  {dept:"People & Culture",q:"Tensions flare between Sales and Logistics. One person steps in, kills finger-pointing, and refocuses both teams on the customer.",opts:["Deliver Value Fast","Bring Good Vibes","Raise the Bar","Dive Deep","Own It","Stay Humble"],a:"QnJpbmcgR29vZCBWaWJlcw==",lp:"QnJpbmcgR29vZCBWaWJlcw==",fb:"TWFrZSBpdCBzYWZlIHRvIHNwZWFrLiBNYWtlIGl0IGVhc3kgdG8gd29yayB0b2dldGhlci4="},
+  {dept:"Commercial & Growth",q:"A target was hit at 105%. Rather than celebrating, the lead does a post-mortem and raises next quarter's quality and retention benchmarks.",opts:["Deliver Value Fast","Bring Good Vibes","Raise the Bar","Dive Deep","Own It","Stay Humble"],a:"UmFpc2UgdGhlIEJhcg==",lp:"UmFpc2UgdGhlIEJhcg==",fb:"RG8gbm90IHNldHRsZS4gQ2hhbGxlbmdlIGRlZmF1bHRzLiBZZXN0ZXJkYXkgaXMgbm90IGdvb2QgZW5vdWdoIGZvciB0b21vcnJvdy4="},
+  {dept:"Executive",q:"A VP admits their forecasting model was wrong in an exec meeting and immediately adopts a junior data scientist's stronger framework.",opts:["Deliver Value Fast","Bring Good Vibes","Raise the Bar","Dive Deep","Own It","Stay Humble"],a:"U3RheSBIdW1ibGU=",lp:"U3RheSBIdW1ibGU=",fb:"WmVybyBlZ28uIE9iamVjdGl2ZSBwdXJzdWl0IG9mIHRydXRoLiBUaGUgYmVzdCBpZGVhIGFsd2F5cyB3aW5zLg=="}
  ]},
 {id:3,num:"ROUND 3 OF 5",name:"HANGMAN QUEST",type:"hangman",time:30,
  tip:'"Letters unlock every 5 seconds. Name the principle before time runs out!"',
  specs:["3 Hidden LPs","30 Seconds","Points Decay"],
  questions:[
-  {dept:"Accountability",q:"A foundational principle is being revealed letter by letter. Name it before time runs out!",word:"OWN IT",hint:"Complete accountability. The buck stops with you."},
-  {dept:"Frontline Truth",q:"Watch the letters appear. Which Leadership Principle is hiding here?",word:"DIVE DEEP",hint:"Go to the source. Inspect every detail."},
-  {dept:"Quality & Standards",q:"Letters are revealing one by one. Can you name this principle first?",word:"RAISE THE BAR",hint:"The standard today won't be enough tomorrow."}
+  {dept:"Accountability",q:"A foundational principle is being revealed letter by letter. Name it before time runs out!",word:"OWN IT",lp:"T3duIEl0",fb:"T3duIEl0IOKAlCBUdXJuIGV2ZXJ5IHN0b25lLiBFbmQtdG8tZW5kLiBObyBleGN1c2VzLg==",hint:"Complete accountability. The buck stops with you.",a:"T1dOIElU"},
+  {dept:"Frontline Truth",q:"Watch the letters appear. Which Leadership Principle is hiding here?",word:"DIVE DEEP",lp:"RGl2ZSBEZWVw",fb:"RGl2ZSBEZWVwIOKAlCBUcnV0aCBsaXZlcyBvbiB0aGUgZnJvbnRsaW5lLg==",hint:"Go to the source. Inspect every detail.",a:"RElWRSBERUVQ"},
+  {dept:"Quality & Standards",q:"Letters are revealing one by one. Can you name this principle first?",word:"RAISE THE BAR",lp:"UmFpc2UgdGhlIEJhcg==",fb:"UmFpc2UgdGhlIEJhciDigJQgU3RhcnQgd2l0aCBpbXBvc3NpYmxlLiBDaGFsbGVuZ2UgdGhlIGRlZmF1bHQu",hint:"The standard today will not be enough tomorrow.",a:"UkFJU0UgVEhFIEJBUg=="}
  ]},
 {id:4,num:"ROUND 4 OF 5",name:"TRUE OR FALSE",type:"tf",time:15,
  tip:'"Be hard on issues, soft on people. Sharp instincts. Clear thinking."',
  specs:["12 Statements","15 Seconds","Lightning Pace"],
  questions:[
-  {dept:"Product",q:"Deliver Value Fast means it's acceptable to ship a broken product as long as you move quickly."},
-  {dept:"Logistics",q:"A fleet lead who spots a safety gear shortage should investigate AND come with supplier solutions — not just flag the problem."},
-  {dept:"All Functions",q:"Raise the Bar applies to senior leaders only — not to frontline or junior employees."},
-  {dept:"Culture",q:"Bring Good Vibes means staying positive even when it means avoiding a necessary difficult conversation."},
-  {dept:"Data",q:"Dive Deep means you should always wait for 100% complete data before making any decision."},
-  {dept:"Finance",q:"Scrutinizing supplier invoices line-by-line before releasing a bulk payment is a strong example of Dive Deep."},
-  {dept:"People",q:"A manager who only gives performance feedback during annual reviews is living Raise the Bar."},
-  {dept:"Leadership",q:"Under Stay Humble, the best idea wins regardless of who suggested it — junior or senior."},
-  {dept:"Operations",q:"A rider living Own It would call customer service when an order drops — rather than fixing it themselves first."},
-  {dept:"Commercial",q:"Deliver Value Fast and maintaining quality are mutually exclusive — you can only have one."},
-  {dept:"Team",q:"Agreeing politely in meetings while harboring private resentment is a Bring Good Vibes violation."},
-  {dept:"All Roles",q:"Your responsibility under Own It ends the moment you hand off a task to another team."}
+  {dept:"Product",q:"Deliver Value Fast means it's acceptable to ship a broken product as long as you move quickly.",a:"ZmFsc2U=",lp:"RGVsaXZlciBWYWx1ZSBGYXN0",fb:"RkFMU0Ug4oCUIFNwZWVkIGFuZCBxdWFsaXR5IGNvZXhpc3QuIFNoaXAgc21hbGwgd29ya2luZyBpbmNyZW1lbnRzIGFuZCBsZWFybiBmYXN0Lg=="},
+  {dept:"Logistics",q:"A fleet lead who spots a safety gear shortage should investigate AND come with supplier solutions — not just flag the problem.",a:"dHJ1ZQ==",lp:"T3duIEl0",fb:"VFJVRSDigJQgT3duIEl0IG1lYW5zIGVzY2FsYXRpbmcgZWFybHkgd2l0aCBwcm9wb3NlZCBhbnN3ZXJzLCBub3QganVzdCBwcm9ibGVtcy4="},
+  {dept:"All Functions",q:"Raise the Bar applies to senior leaders only — not to frontline or junior employees.",a:"ZmFsc2U=",lp:"UmFpc2UgdGhlIEJhcg==",fb:"RkFMU0Ug4oCUIFJhaXNlIHRoZSBCYXIgaXMgZm9yIGV2ZXJ5b25lLCBhdCBldmVyeSBsZXZlbCwgZXZlcnkgc2luZ2xlIGRheS4="},
+  {dept:"Culture",q:"Bring Good Vibes means staying positive even when it means avoiding a necessary difficult conversation.",a:"ZmFsc2U=",lp:"QnJpbmcgR29vZCBWaWJlcw==",fb:"RkFMU0Ug4oCUIEJlIGhhcmQgb24gaXNzdWVzLCBzb2Z0IG9uIHBlb3BsZS4gUmVhbCBraW5kbmVzcyBtZWFucyBob25lc3QgY29udmVyc2F0aW9ucy4="},
+  {dept:"Data",q:"Dive Deep means you should always wait for 100% complete data before making any decision.",a:"ZmFsc2U=",lp:"RGl2ZSBEZWVw",fb:"RkFMU0Ug4oCUIERpdmUgRGVlcCBpcyBhYm91dCB1bmRlcnN0YW5kaW5nIGRlZXBseSDigJQgbm90IGFuYWx5c2lzIHBhcmFseXNpcy4="},
+  {dept:"Finance",q:"Scrutinizing supplier invoices line-by-line before releasing a bulk payment is a strong example of Dive Deep.",a:"dHJ1ZQ==",lp:"RGl2ZSBEZWVw",fb:"VFJVRSDigJQgS25vd2luZyB0aGUgZGV0YWlscyB0aGF0IG1hdHRlciBpbiBldmVyeSBmdW5jdGlvbiBpcyBEaXZlIERlZXAu"},
+  {dept:"People",q:"A manager who only gives performance feedback during annual reviews is living Raise the Bar.",a:"ZmFsc2U=",lp:"UmFpc2UgdGhlIEJhcg==",fb:"RkFMU0Ug4oCUIEZlZWRiYWNrIHVubG9ja3MgYm9sZCBtb3Zlcy4gU2hhcmUgaXQgaW4gdGhlIG1vbWVudC4="},
+  {dept:"Leadership",q:"Under Stay Humble, the best idea wins regardless of who suggested it — junior or senior.",a:"dHJ1ZQ==",lp:"U3RheSBIdW1ibGU=",fb:"VFJVRSDigJQgVGhlIGJlc3QgaWRlYSB3aW5zLCBub3QgdGhlIGJpZ2dlc3QgdGl0bGUu"},
+  {dept:"Operations",q:"A rider living Own It would call customer service when an order drops — rather than fixing it themselves first.",a:"ZmFsc2U=",lp:"T3duIEl0",fb:"RkFMU0Ug4oCUIE93biBJdCBtZWFucyBpbW1lZGlhdGUgYWN0aW9uLiBGaXggaXQgeW91cnNlbGYgZmlyc3QsIHRoZW4gcmVwb3J0Lg=="},
+  {dept:"Commercial",q:"Delivering Value Fast and maintaining quality are mutually exclusive — you can only have one.",a:"ZmFsc2U=",lp:"RGVsaXZlciBWYWx1ZSBGYXN0",fb:"RkFMU0Ug4oCUIFNwZWVkIGFuZCBxdWFsaXR5IGNvZXhpc3QgdGhyb3VnaCBzbWFsbCwgZmFzdCwgaXRlcmF0aXZlIGRlbGl2ZXJ5Lg=="},
+  {dept:"Team",q:"Agreeing politely in meetings while harboring private resentment is a Bring Good Vibes violation.",a:"dHJ1ZQ==",lp:"QnJpbmcgR29vZCBWaWJlcw==",fb:"VFJVRSDigJQgQmUgUkVBTC4gQmUgS0lORC4gSGlkZGVuIGFnZW5kYXMgZGVzdHJveSB0ZWFtIHRydXN0Lg=="},
+  {dept:"All Roles",q:"Your responsibility under Own It ends the moment you hand off a task to another team.",a:"ZmFsc2U=",lp:"T3duIEl0",fb:"RkFMU0Ug4oCUIE93biBJdCBpcyBlbmQtdG8tZW5kLiBBY2NvdW50YWJpbGl0eSBkb2VzIG5vdCBzdG9wIGF0IHRoZSBoYW5kb2ZmLg=="}
  ]},
 {id:5,num:"ROUND 5 OF 5",name:"RAPID FIRE FINALE",type:"mc6",time:10,
  tip:'"Maximum pressure. 10 seconds. Leave absolutely nothing on the table!"',
  specs:["8 Final Questions","10 Seconds","Maximum Pressure"],
  questions:[
-  {dept:"Tech & Operations",q:"A tech lead rolls back immediately after a checkout spike during peak hour, alerts all stakeholders, and runs root-cause analysis within 1 hour — all unprompted.",opts:["Deliver Value Fast","Bring Good Vibes","Raise the Bar","Dive Deep","Own It","Stay Humble"]},
-  {dept:"Logistics",q:"Delivery times in one zone are 4 minutes slower. A coordinator analyzes heatmaps AND rides along on a motorcycle — and discovers a blocked side street.",opts:["Deliver Value Fast","Bring Good Vibes","Raise the Bar","Dive Deep","Own It","Stay Humble"]},
-  {dept:"Growth",q:"A competitor launches an aggressive campaign. A growth lead assembles a counter-campaign in 24 hours instead of waiting for quarterly budget approval.",opts:["Deliver Value Fast","Bring Good Vibes","Raise the Bar","Dive Deep","Own It","Stay Humble"]},
-  {dept:"People & Culture",q:"Two squads are in conflict. One person steps in with empathy, refocuses both teams on the customer, and turns tension into momentum.",opts:["Deliver Value Fast","Bring Good Vibes","Raise the Bar","Dive Deep","Own It","Stay Humble"]},
-  {dept:"Partner Care",q:"A vendor satisfaction score sits at 89% — meeting the target. The squad refuses to celebrate and benchmarks against world-class 96% instead.",opts:["Deliver Value Fast","Bring Good Vibes","Raise the Bar","Dive Deep","Own It","Stay Humble"]},
-  {dept:"Finance",q:"An ops lead spots a low-value SaaS subscription and personally cancels and renegotiates the tier — saving $40k — without being asked.",opts:["Deliver Value Fast","Bring Good Vibes","Raise the Bar","Dive Deep","Own It","Stay Humble"]},
-  {dept:"Executive",q:"A senior executive spends half a day monthly packing grocery orders in a dark store to stay grounded in real frontline operations.",opts:["Deliver Value Fast","Bring Good Vibes","Raise the Bar","Dive Deep","Own It","Stay Humble"]},
-  {dept:"Dispatch & Ops",q:"A temporary batching workflow is deployed today to fix a rain backlog — while the permanent automated solution is built properly next month.",opts:["Deliver Value Fast","Bring Good Vibes","Raise the Bar","Dive Deep","Own It","Stay Humble"]}
+  {dept:"Tech & Operations",q:"A tech lead rolls back immediately after a checkout spike during peak hour, alerts all stakeholders, and runs root-cause analysis within 1 hour — all unprompted.",opts:["Deliver Value Fast","Bring Good Vibes","Raise the Bar","Dive Deep","Own It","Stay Humble"],a:"T3duIEl0",lp:"T3duIEl0",fb:"T3duIEl0IOKAlCBJbW1lZGlhdGUgYWNjb3VudGFiaWxpdHksIHplcm8gZXhjdXNlcywgY29tcGxldGUgZm9sbG93LXRocm91Z2gu"},
+  {dept:"Logistics",q:"Delivery times in one zone are 4 minutes slower. A coordinator analyzes heatmaps AND rides along on a motorcycle — and discovers a blocked side street.",opts:["Deliver Value Fast","Bring Good Vibes","Raise the Bar","Dive Deep","Own It","Stay Humble"],a:"RGl2ZSBEZWVw",lp:"RGl2ZSBEZWVw",fb:"RGl2ZSBEZWVwIOKAlCBUcnV0aCBsaXZlcyBvbiB0aGUgZnJvbnRsaW5lLiBIYW5kcy1vbiBiZWF0cyBhcm1jaGFpciBndWVzc2luZy4="},
+  {dept:"Growth",q:"A competitor launches an aggressive campaign. A growth lead assembles a counter-campaign in 24 hours instead of waiting for quarterly budget approval.",opts:["Deliver Value Fast","Bring Good Vibes","Raise the Bar","Dive Deep","Own It","Stay Humble"],a:"RGVsaXZlciBWYWx1ZSBGYXN0",lp:"RGVsaXZlciBWYWx1ZSBGYXN0",fb:"RGVsaXZlciBWYWx1ZSBGYXN0IOKAlCBTcGVlZCBvdmVyIGNvbW1pdHRlZSBjeWNsZXMuIEFjdCBub3csIHJlZmluZSBmYXN0Lg=="},
+  {dept:"People & Culture",q:"Two squads are in conflict. One person steps in with empathy, refocuses both teams on the customer, and turns tension into momentum.",opts:["Deliver Value Fast","Bring Good Vibes","Raise the Bar","Dive Deep","Own It","Stay Humble"],a:"QnJpbmcgR29vZCBWaWJlcw==",lp:"QnJpbmcgR29vZCBWaWJlcw==",fb:"QnJpbmcgR29vZCBWaWJlcyDigJQgUG9zaXRpdmUgY3VsdHVyZSBhY2NlbGVyYXRlcyB0ZWFtIHZlbG9jaXR5Lg=="},
+  {dept:"Partner Care",q:"A vendor satisfaction score sits at 89% — meeting the target. The squad refuses to celebrate and benchmarks against world-class 96% instead.",opts:["Deliver Value Fast","Bring Good Vibes","Raise the Bar","Dive Deep","Own It","Stay Humble"],a:"UmFpc2UgdGhlIEJhcg==",lp:"UmFpc2UgdGhlIEJhcg==",fb:"UmFpc2UgdGhlIEJhciDigJQgRG8gbm90IHNldHRsZS4gQ2hhbGxlbmdlIHRoZSBkZWZhdWx0IGJlbmNobWFyay4="},
+  {dept:"Finance",q:"An ops lead spots a low-value SaaS subscription and personally cancels and renegotiates the tier — saving $40k — without being asked.",opts:["Deliver Value Fast","Bring Good Vibes","Raise the Bar","Dive Deep","Own It","Stay Humble"],a:"T3duIEl0",lp:"T3duIEl0",fb:"T3duIEl0IOKAlCBUcmVhdCBjb21wYW55IHJlc291cmNlcyBsaWtlIHlvdXIgb3duLiBTdGVwIHVwIHdpdGhvdXQgYmVpbmcgYXNrZWQu"},
+  {dept:"Executive",q:"A senior executive spends half a day monthly packing grocery orders in a dark store to stay grounded in real frontline operations.",opts:["Deliver Value Fast","Bring Good Vibes","Raise the Bar","Dive Deep","Own It","Stay Humble"],a:"U3RheSBIdW1ibGU=",lp:"U3RheSBIdW1ibGU=",fb:"U3RheSBIdW1ibGUg4oCUIEZsaXAgdGhlIHB5cmFtaWQuIFNlcnZlIHRoZSBmcm9udGxpbmUgYW5kIHN0YXkgY29ubmVjdGVkLg=="},
+  {dept:"Dispatch & Ops",q:"A temporary batching workflow is deployed today to fix a rain backlog — while the permanent automated solution is built properly next month.",opts:["Deliver Value Fast","Bring Good Vibes","Raise the Bar","Dive Deep","Own It","Stay Humble"],a:"RGVsaXZlciBWYWx1ZSBGYXN0",lp:"RGVsaXZlciBWYWx1ZSBGYXN0",fb:"RGVsaXZlciBWYWx1ZSBGYXN0IOKAlCBTaGlwIGltbWVkaWF0ZSByZWxpZWYgbm93LiBEbyBub3Qgd2FpdCBmb3IgcGVyZmVjdGlvbi4="}
  ]}
-];
+]
 const TOTAL_Q=ROUNDS.reduce((s,r)=>s+r.questions.length,0);
 
 // ── STATE ──────────────────────────────────────────────────────
@@ -1495,10 +1497,14 @@ function renderMC(q,n,ac){
 function pickMC(chosen,q,ac){
   if(G.answering)return;
   G.answering=true;clearTimer();G.totalQ++;recordSpeed();
-  // Lock UI immediately
-  ac.querySelectorAll('.opt').forEach(b=>b.classList.add('locked'));
-  // Validate against server
-  validateAnswer(chosen,q,ac,'mc');
+  const ok=dec(q.a)===chosen;
+  ac.querySelectorAll('.opt').forEach(b=>{
+    b.classList.add('locked');
+    if(b.dataset.v===dec(q.a))b.classList.add('correct');
+    else if(b.dataset.v===chosen&&!ok)b.classList.add('wrong');
+    else b.classList.add('dim');
+  });
+  doResult(ok,ok?100+Math.round(G.timeLeft/G.maxTime*60):0,{lp:dec(q.lp),fb:dec(q.fb)});
 }
 
 // ── T/F ────────────────────────────────────────────────────────
@@ -1516,8 +1522,15 @@ function renderTF(q,ac){
 function pickTF(chosen,q,ac){
   if(G.answering)return;
   G.answering=true;clearTimer();G.totalQ++;recordSpeed();
-  ac.querySelectorAll('.opt').forEach(b=>b.classList.add('locked'));
-  validateAnswer(String(chosen),q,ac,'tf');
+  const ok=String(chosen)===dec(q.a);
+  ac.querySelectorAll('.opt').forEach(b=>{
+    b.classList.add('locked');
+    const bv=b.dataset.v;
+    if(bv===dec(q.a))b.classList.add('correct');
+    else if(bv===String(chosen)&&!ok)b.classList.add('wrong');
+    else b.classList.add('dim');
+  });
+  doResult(ok,ok?80+Math.round(G.timeLeft/G.maxTime*40):0,{lp:dec(q.lp),fb:dec(q.fb)});
 }
 
 // ── HANGMAN ────────────────────────────────────────────────────
@@ -1559,71 +1572,12 @@ function doHang(q){
   const wd=document.getElementById('hW');
   if(wd){G.hangRevealed=G.hangRevealed.map(()=>true);rSlots(wd);
     wd.querySelectorAll('.h-slot').forEach(s=>s.style.color=ok?'#16a34a':'#ba1a1a');}
-  validateAnswer(ans,q,null,'hang');
+  const ok=ans===dec(q.a)||ans.toLowerCase()===dec(q.lp).toLowerCase();
+  const rev=G.hangRevealed.filter((v,i)=>G.hangWord[i]!==' '&&v).length;
+  const tot=G.hangWord.replace(/ /g,'').length;
+  doResult(ok,ok?Math.max(60,Math.round((1-rev/tot)*90)+Math.round(G.timeLeft/G.maxTime*40)):0,{lp:dec(q.lp),fb:dec(q.fb)});
 }
 
-// ── SERVER VALIDATION ────────────────────────────────────────────
-function validateAnswer(chosen,q,ac,type){
-  // Build round+question index for server lookup
-  const ri=G.ri, qi=G.qi;
-  const r=ROUNDS[ri], tl=G.timeLeft, mt=G.maxTime;
-  const params=new URLSearchParams({
-    action:'check',
-    ri:ri, qi:qi,
-    answer:chosen,
-    tl:tl, mt:mt,
-    rt:r?r.type:'mc4'
-  });
-
-  // Show loading state briefly
-  const loadTimeout=setTimeout(()=>{
-    // Fallback: if server takes >3s, show neutral state and move on
-    doResult(false,0,{lp:'—',fb:'Could not verify answer — please check your connection.'});
-  },4000);
-
-  fetch(`${WEBHOOK}?${params.toString()}`)
-    .then(r=>r.json())
-    .then(data=>{
-      clearTimeout(loadTimeout);
-      const ok=data.correct===true;
-      const pts=data.points||0;
-      const fakeQ={lp:data.lp||'',fb:data.fb||''};
-
-      // Show correct/wrong on UI
-      if(ac){
-        if(type==='mc'){
-          ac.querySelectorAll('.opt').forEach(b=>{
-            if(b.dataset.v===data.correctAnswer)b.classList.add('correct');
-            else if(b.dataset.v===chosen&&!ok)b.classList.add('wrong');
-            else b.classList.add('dim');
-          });
-        } else if(type==='tf'){
-          ac.querySelectorAll('.opt').forEach(b=>{
-            const bv=b.dataset.v;
-            if(bv===String(data.correctAnswer))b.classList.add('correct');
-            else if(bv===chosen&&!ok)b.classList.add('wrong');
-            else b.classList.add('dim');
-          });
-        }
-      } else if(type==='hang'){
-        const wd=document.getElementById('hW');
-        if(wd){
-          G.hangRevealed=G.hangRevealed.map(()=>true);
-          rSlots(wd);
-          wd.querySelectorAll('.h-slot').forEach(s=>s.style.color=ok?'#16a34a':'#ba1a1a');
-        }
-      }
-      doResult(ok,pts,fakeQ);
-    })
-    .catch(()=>{
-      clearTimeout(loadTimeout);
-      // Network error — fail gracefully
-      if(ac){
-        ac.querySelectorAll('.opt').forEach(b=>b.classList.add('dim'));
-      }
-      doResult(false,0,{lp:'—',fb:'Connection error — answer could not be verified.'});
-    });
-}
 
 // ── RESULT ─────────────────────────────────────────────────────
 function recordSpeed(){G.speedSamples.push((Date.now()-G._qs)/1000);}
