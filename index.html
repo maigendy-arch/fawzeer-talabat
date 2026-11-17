@@ -606,13 +606,37 @@ document.getElementById('btnStart').addEventListener('click',async()=>{
   const mk=document.getElementById('inpMarket').value;
   let ok=true;
   if(nm.length<2){document.getElementById('errName').style.display='block';ok=false;}else document.getElementById('errName').style.display='none';
-  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){document.getElementById('errEmail').style.display='block';ok=false;}else document.getElementById('errEmail').style.display='none';
+  if(!em.includes('@')||!em.includes('.')){document.getElementById('errEmail').style.display='block';ok=false;}else document.getElementById('errEmail').style.display='none';
   if(!mk){document.getElementById('errMarket').style.display='block';ok=false;}else document.getElementById('errMarket').style.display='none';
   if(!ok)return;
   G.name=nm;G.email=em;G.market=mk;
-  const btn=document.getElementById('btnStart');btn.disabled=true;document.getElementById('btnTxt').textContent='Checking…';
-  if(WEBHOOK){try{const r=await fetch(`${WEBHOOK}?email=${encodeURIComponent(em)}`);const d=await r.json();if(d&&d.exists){document.getElementById('regForm').style.display='none';const ab=document.getElementById('alreadyBox');ab.style.display='flex';document.getElementById('alreadyHi').textContent='Welcome back, '+(d.name||nm)+'! 👋';document.getElementById('alreadyPts').textContent=d.score||0;if(em==='mai.gendy@talabat.com'){const w=document.getElementById('adminResetWrap');if(w)w.style.display='block';}btn.disabled=false;document.getElementById('btnTxt').textContent='⚡ Enter the Arena';return;}}catch{}}
-  btn.disabled=false;document.getElementById('btnTxt').textContent='⚡ Enter the Arena';
+  const btn=document.getElementById('btnStart');
+  btn.disabled=true;
+  document.getElementById('btnTxt').textContent='Checking…';
+  // Check email with 3s timeout — if fails just start game
+  if(WEBHOOK){
+    try{
+      const controller=new AbortController();
+      const timeout=setTimeout(()=>controller.abort(),3000);
+      const r=await fetch(WEBHOOK+'?email='+encodeURIComponent(em),{signal:controller.signal});
+      clearTimeout(timeout);
+      const d=await r.json();
+      if(d&&d.exists){
+        document.getElementById('regForm').style.display='none';
+        const ab=document.getElementById('alreadyBox');ab.style.display='flex';
+        document.getElementById('alreadyHi').textContent='Welcome back, '+(d.name||nm)+'! 👋';
+        document.getElementById('alreadyPts').textContent=d.score||0;
+        if(em==='mai.gendy@talabat.com'){const w=document.getElementById('adminResetWrap');if(w)w.style.display='block';}
+        btn.disabled=false;document.getElementById('btnTxt').textContent='⚡ Enter the Arena';
+        return;
+      }
+    }catch(err){
+      // Timeout or network error — just continue and start game
+      console.log('Email check skipped:',err.message);
+    }
+  }
+  btn.disabled=false;
+  document.getElementById('btnTxt').textContent='⚡ Enter the Arena';
   Object.assign(G,{score:0,streak:0,correctQ:0,totalQ:0,ri:0,qi:0,roundScores:[0,0,0,0,0],roundCorrect:[0,0,0,0,0],speedSamples:[]});
   showIntro(0);
 });
